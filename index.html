@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algebra 2 Test Prep</title>
+<style>
+:root{
+  --bg:#f5f6f8; --card:#ffffff; --ink:#1c2430; --muted:#5d6878; --line:#dfe3ea;
+  --accent:#2457c5; --accent-ink:#ffffff; --soft:#eaf0fc;
+  --good:#1e7d46; --good-bg:#e4f5ea; --bad:#b3261e; --bad-bg:#fbe9e7; --step:#fff8e1; --step-line:#e6c65a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#12161c; --card:#1b212a; --ink:#e8ecf2; --muted:#9aa6b6; --line:#2e3744;
+    --accent:#7aa2ff; --accent-ink:#0d1420; --soft:#222c3d;
+    --good:#6fd698; --good-bg:#17301f; --bad:#ff8a80; --bad-bg:#3a1c1a; --step:#2b2715; --step-line:#8a7528;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 80px}
+h1{font-size:26px;margin:14px 0 2px}
+.sub{color:var(--muted);margin:0 0 14px}
+nav{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}
+nav button{flex:1 1 130px;padding:12px 10px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.card h2{margin:0 0 6px;font-size:21px}
+.card h3{margin:16px 0 6px;font-size:17px}
+.topic>summary{cursor:pointer;font-weight:700;font-size:19px;list-style:none;display:flex;gap:10px;align-items:center}
+.topic>summary::-webkit-details-marker{display:none}
+.num{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:700}
+.rule{background:var(--soft);border-radius:10px;padding:10px 14px;margin:10px 0}
+.rule b{color:var(--accent)}
+.math{font-family:"Cambria Math",Georgia,"Times New Roman",serif;font-size:1.08em;white-space:nowrap}
+sup{font-size:.72em}
+.steps{margin:10px 0 0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;background:var(--step);border-left:4px solid var(--step-line);border-radius:8px;padding:9px 12px 9px 44px;margin:8px 0;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:10px;top:9px;width:24px;height:24px;border-radius:50%;background:var(--step-line);color:#1c1c1c;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.btn{display:inline-block;padding:10px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;cursor:pointer;margin:8px 8px 0 0}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.q{font-size:18px;margin:6px 0 10px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:8px 0}
+.opt{padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.opt.sel{border-color:var(--accent);background:var(--soft)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.part{margin:10px 0}
+.part label{display:block;color:var(--muted);font-size:15px;margin-bottom:4px}
+input[type=text]{font:inherit;padding:9px 10px;border:2px solid var(--line);border-radius:10px;width:150px;background:var(--card);color:var(--ink)}
+input.right{border-color:var(--good);background:var(--good-bg)} input.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.msg{font-weight:700;margin:10px 0 0;padding:9px 12px;border-radius:10px}
+.msg.good{color:var(--good);background:var(--good-bg)} .msg.bad{color:var(--bad);background:var(--bad-bg)}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--good);width:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font-size:14px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+table{border-collapse:collapse;margin:8px 0}
+td,th{border:1px solid var(--line);padding:6px 14px;text-align:center}
+th{background:var(--soft)}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.dot{width:34px;height:34px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
+.dot.cur{border-color:var(--accent)} .dot.ok{background:var(--good-bg);border-color:var(--good)} .dot.no{background:var(--bad-bg);border-color:var(--bad)}
+.hide{display:none}
+dl{margin:0} dt{font-weight:700;margin-top:10px} dd{margin:0;color:var(--muted)}
+small.tip{color:var(--muted);display:block;margin-top:6px}
+.mark{margin-left:auto;color:var(--good);font-size:24px;font-weight:800;min-width:24px;text-align:right}
+.topic.done{border-color:var(--good)}
+.tickbox{display:flex;align-items:center;gap:10px;margin-top:18px;padding:12px 14px;border:2px dashed var(--line);border-radius:10px;font-weight:700;cursor:pointer}
+.tickbox input{width:24px;height:24px;accent-color:var(--good)}
+.result{text-align:center}
+.result .big{font-size:72px;font-weight:800;line-height:1.1}
+.result.perfect .big,.result.ready .big{color:var(--good)} .result.zero .big{color:var(--bad)}
+.tlist{list-style:none;padding:0;margin:10px auto;max-width:560px;text-align:left} .tlist li{margin:8px 0} .tlist .opt{width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.wrongq{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row"><h1>Algebra 2 Unit 1: Test Prep</h1><button class="btn ghost" id="sound" style="margin:0">Sound: on</button></div>
+  <p class="sub">Polynomials, power functions and quadratic equations. Learn a topic, then practise it. Every answer comes with the steps.</p>
+  <nav>
+    <button data-tab="learn" class="on">1. Learn</button>
+    <button data-tab="practice">2. Review sheet</button>
+    <button data-tab="extra">3. Extra practice</button>
+    <button data-tab="test" id="testtab">4. Test (locked)</button>
+    <button data-tab="sheet">Formulas &amp; words</button>
+  </nav>
+  <section id="learn"></section>
+  <section id="practice" class="hide"></section>
+  <section id="extra" class="hide"></section>
+  <section id="test" class="hide"></section>
+  <section id="sheet" class="hide"></section>
+</div>
+
+<script>
+// ---------- helpers ----------
+// m("x^2 + 5x") -> math with real superscripts
+function m(s){ return '<span class="math">' + String(s).replace(/\^\{([^}]+)\}/g,'<sup>$1</sup>').replace(/\^(-?\d+|[a-z])/g,'<sup>$1</sup>') + '</span>'; }
+function norm(v){ return String(v).trim().toLowerCase().replace(/\s+/g,'').replace(/[−–]/g,'-').replace(/^\+/,''); }
+function sameNum(a,b){ const x=parseFloat(norm(a)), y=parseFloat(norm(b)); return isFinite(x)&&isFinite(y)&&Math.abs(x-y)<1e-9 && /^-?\d*\.?\d+$/.test(norm(a)); }
+function ri(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function pick(arr){ return arr[ri(0,arr.length-1)]; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]];} return a; }
+function sgn(n){ return n<0 ? '− '+Math.abs(n) : '+ '+n; }
+function neg(n){ return n<0 ? '−'+Math.abs(n) : ''+n; }           // nice minus sign
+function par(n){ return n<0 ? '('+neg(n)+')' : ''+n; }
+// build a polynomial string from [[coef,exp],...]
+function poly(terms, v){ v=v||'x'; let out='';
+  terms.forEach(([c,e],i)=>{ if(c===0) return; const a=Math.abs(c); const body=(e===0? a : (a===1?'':a)+v+(e===1?'':'^'+e));
+    out += (out==='' ? (c<0?'−':'')+body : (c<0?' − ':' + ')+body); });
+  return out||'0'; }
+
+// ---------- LEARN: lessons ----------
+const WORDS=['binomial','discriminant','end behavior','imaginary unit','leading coefficient','monomial','quadratic formula','square root property','trinomial','vertex','zero'];
+const LESSONS=[
+{t:'What is a polynomial?', html:`
+  <p>A <b>polynomial</b> is a sum of terms like ${m('5x^3')} or ${m('−2x')} or ${m('7')}. The exponents must be <b>whole numbers</b> (0, 1, 2, 3 …).</p>
+  <div class="rule"><b>Names by number of terms:</b> 1 term = monomial, 2 terms = binomial, 3 terms = trinomial.<br>
+  <b>Degree:</b> the biggest exponent.<br><b>Leading coefficient:</b> the number in front of the term with the biggest exponent.</div>
+  <div class="rule"><b>NOT a polynomial</b> if it has: a negative exponent (${m('3x^-2')}), a variable on the bottom of a fraction (${m('5/x')}), or a variable under a root (${m('√x')}).<br>Fractions as <i>numbers</i> are fine: ${m('⅔a^2 − 4a + 1')} is a polynomial.</div>`,
+ ex:{q:`Find the degree, the leading coefficient and ${m('f(0)')} for ${m('f(x) = −3x^4 + 2x^3 − x + 9')}.`,
+  steps:[`Look at every exponent: 4, 3, 1 (plain ${m('x')} means ${m('x^1')}) and 0 (the 9 has no x).`,`The biggest exponent is 4, so the <b>degree is 4</b>.`,`The term with that exponent is ${m('−3x^4')}. The number in front is <b>−3</b>. That is the leading coefficient.`,`For ${m('f(0)')}, swap every x for 0: ${m('−3(0)^4 + 2(0)^3 − 0 + 9')}. Everything with a 0 disappears, so ${m('f(0) = 9')}.`]},
+ checks:[{q:`Is ${m('3x^-2 + x')} a polynomial?`,options:['Yes','No'],a:1,why:'No. It has a negative exponent (−2).'},
+         {q:`What is the degree of ${m('4x^3 − 8x^6 + 2x − 1')}?`,options:['3','6','4','−8'],a:1,why:'The biggest exponent is 6. The order the terms are written in does not matter.'}]},
+{t:'Power functions: end behavior, range and zeros', html:`
+  <p>A <b>power function</b> looks like ${m('f(x) = ax^n')}. <b>End behavior</b> means: what does the graph do far to the left and far to the right?</p>
+  <p>You only need two things: is ${m('n')} even or odd, and is ${m('a')} positive or negative?</p>
+  <table><tr><th></th><th>a is positive</th><th>a is negative</th></tr>
+  <tr><th>n is even</th><td>both ends go UP<br>range: ${m('f(x) ≥ 0')}</td><td>both ends go DOWN<br>range: ${m('f(x) ≤ 0')}</td></tr>
+  <tr><th>n is odd</th><td>left DOWN, right UP<br>range: all real numbers</td><td>left UP, right DOWN<br>range: all real numbers</td></tr></table>
+  <div class="rule"><b>Up</b> is written ${m('f(x) → ∞')}. <b>Down</b> is written ${m('f(x) → −∞')}.<br><b>Zero:</b> an x-value where ${m('f(x) = 0')}. To find it, set the function equal to 0 and solve.</div>`,
+ ex:{q:`Describe the end behavior of ${m('f(x) = −2x^4')}.`,
+  steps:[`The exponent is 4. That is <b>even</b>, so both ends go the same way.`,`The number in front is −2. That is <b>negative</b>, so both ends go <b>down</b>.`,`Write it: as ${m('x → −∞')}, ${m('f(x) → −∞')}, and as ${m('x → ∞')}, ${m('f(x) → −∞')}.`]},
+ checks:[{q:`Which function has a range of only values less than or equal to zero?`,options:[m('x^6'),m('−x^6'),m('x^3'),m('−x^3')],a:1,why:`${m('x^6')} is never negative, so ${m('−x^6')} is never positive. Odd powers reach every number.`},
+         {q:`Where is the real zero of ${m('f(x) = x^3 − 27')}?`,options:['x = 3','x = 9','x = −3','x = 27'],a:0,why:`Set it to 0: ${m('x^3 = 27')}. The cube root of 27 is 3, because 3 × 3 × 3 = 27.`}]},
+{t:'Finding zeros from a table', html:`
+  <p>A zero is where the graph crosses the x-axis. In a table you spot it where ${m('f(x)')} <b>changes sign</b>: from + to −, or from − to +.</p>
+  <div class="rule">If one value is positive and the next is negative, the graph must cross zero somewhere <b>between</b> those two x-values.</div>
+  <table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>f(x)</th><td>6</td><td>−9</td><td>−10</td><td>−9</td><td>6</td></tr></table>`,
+ ex:{q:`The table above is for ${m('f(x) = x^4 − 10')}. Where are the zeros?`,
+  steps:[`Read the signs left to right: +, −, −, −, +.`,`First change: + at ${m('x = −2')} to − at ${m('x = −1')}. So there is a zero <b>between −2 and −1</b>.`,`From −1 to 0 to 1 the sign stays negative. No zero there.`,`Second change: − at ${m('x = 1')} to + at ${m('x = 2')}. So there is a zero <b>between 1 and 2</b>.`]},
+ checks:[{q:`A table shows ${m('f(3) = −4')} and ${m('f(4) = 5')}. What does that tell you?`,options:['There is a zero between 3 and 4','There is no zero','The zero is exactly 3','The zero is exactly 4'],a:0,why:'The sign changes from negative to positive, so the graph crosses zero between 3 and 4.'}]},
+{t:'Adding and subtracting polynomials', html:`
+  <p>You can only add <b>like terms</b>: terms with the <b>same exponent</b>. Add the numbers in front and keep the exponent the same.</p>
+  <div class="rule"><b>Add:</b> line up like terms and add their numbers.<br><b>Subtract:</b> first flip the sign of every term in the second polynomial, then add.</div>`,
+ ex:{q:`Add ${m('(5x^3 − 3x^2 + 6x + 9) + (4x^3 + 7x^2 − 2x − 15)')}.`,
+  steps:[`${m('x^3')} terms: 5 + 4 = 9, so ${m('9x^3')}.`,`${m('x^2')} terms: −3 + 7 = 4, so ${m('4x^2')}.`,`${m('x')} terms: 6 + (−2) = 4, so ${m('4x')}.`,`Plain numbers: 9 + (−15) = −6.`,`Put it together: ${m('9x^3 + 4x^2 + 4x − 6')}.`]},
+ checks:[{q:`Subtract: ${m('(5x^2 + 3x − 2) − (2x^2 − 4x + 7)')}`,options:[m('3x^2 + 7x − 9'),m('3x^2 − x + 5'),m('7x^2 − x + 5'),m('3x^2 + 7x + 5')],a:0,why:`Flip the second one: ${m('−2x^2 + 4x − 7')}. Then add: 5−2 = 3, 3+4 = 7, −2−7 = −9.`}]},
+{t:'Multiplying polynomials', html:`
+  <p>Multiply the <b>numbers</b>, and <b>add the exponents</b>.</p>
+  <div class="rule">${m('4x^2 · 2x^3 = 8x^5')} because 4 × 2 = 8 and 2 + 3 = 5.<br>
+  <b>One term × many terms:</b> multiply it by each term inside the brackets.<br>
+  <b>Two terms × two terms:</b> multiply every term in the first by every term in the second (4 multiplications), then add like terms.</div>`,
+ ex:{q:`Find the area of a sign with length ${m('(5x + 3)')} and width ${m('(2x + 4)')}.`,
+  steps:[`Area = length × width = ${m('(5x + 3)(2x + 4)')}.`,`${m('5x · 2x = 10x^2')}`,`${m('5x · 4 = 20x')}`,`${m('3 · 2x = 6x')}`,`${m('3 · 4 = 12')}`,`Add the like terms: 20x + 6x = 26x. Answer: ${m('10x^2 + 26x + 12')}.`]},
+ checks:[{q:`Multiply ${m('4x^2(2x^3 + 5x^2 − 6x + 3)')}.`,options:[m('8x^5 + 20x^4 − 24x^3 + 12x^2'),m('8x^6 + 20x^4 − 24x^2 + 12'),m('6x^5 + 9x^4 − 2x^3 + 7x^2'),m('8x^5 + 5x^2 − 6x + 3')],a:0,why:`Multiply ${m('4x^2')} by each term: 4×2 = 8 and 2+3 = 5; 4×5 = 20 and 2+2 = 4; 4×(−6) = −24 and 2+1 = 3; 4×3 = 12 and the exponent stays 2.`}]},
+{t:'Dividing by a monomial', html:`
+  <p>Divide <b>each term</b> on its own. Divide the <b>numbers</b>, and <b>subtract the exponents</b>.</p>
+  <div class="rule">${m('36x^9 ÷ 6x^3 = 6x^6')} because 36 ÷ 6 = 6 and 9 − 3 = 6.<br>If the exponents are equal, the x disappears: ${m('24x^3 ÷ 6x^3 = 4')}.</div>`,
+ ex:{q:`Find the quotient: ${m('(36x^9 + 24x^3) ÷ (6x^3)')}.`,
+  steps:[`Split it into two divisions: ${m('36x^9 ÷ 6x^3')} and ${m('24x^3 ÷ 6x^3')}.`,`First: 36 ÷ 6 = 6, and 9 − 3 = 6. So ${m('6x^6')}.`,`Second: 24 ÷ 6 = 4, and 3 − 3 = 0, so no x is left. That gives 4.`,`Answer: ${m('6x^6 + 4')}.`]},
+ checks:[{q:`${m('(20x^5 + 10x^2) ÷ (5x^2)')} = ?`,options:[m('4x^3 + 2'),m('4x^7 + 2x^4'),m('15x^3 + 5'),m('4x^3 + 2x')],a:0,why:'20 ÷ 5 = 4 and 5 − 2 = 3. Then 10 ÷ 5 = 2 and 2 − 2 = 0, so the x is gone.'}]},
+{t:'Square Root Property and imaginary numbers', html:`
+  <div class="rule"><b>Square Root Property:</b> if ${m('x^2 = n')}, then ${m('x = ±√n')}.<br>The ± means there are two answers: one positive, one negative.</div>
+  <p>First get ${m('x^2')} alone on one side. Then take the square root of both sides.</p>
+  <div class="rule"><b>Imaginary unit:</b> ${m('i')} is the number where ${m('i^2 = −1')}, so ${m('√(−1) = i')}.<br>If you have to take the root of a <b>negative</b> number, take the root of the positive number and put ${m('i')} after it: ${m('√(−49) = 7i')}.</div>`,
+ ex:{q:`Solve ${m('x^2 + 49 = 0')}.`,
+  steps:[`Get ${m('x^2')} alone: subtract 49 from both sides. ${m('x^2 = −49')}.`,`Take the square root of both sides: ${m('x = ±√(−49)')}.`,`The number is negative, so the answer uses ${m('i')}. ${m('√49 = 7')}, so ${m('√(−49) = 7i')}.`,`Answer: ${m('x = ±7i')}.`]},
+ checks:[{q:`Solve ${m('x^2 + 4 = 15')}.`,options:[m('x = ±√19'),m('x = ±√15'),m('x = ±√11'),m('x = ±√4')],a:2,why:`Subtract 4 from both sides: ${m('x^2 = 11')}. Then ${m('x = ±√11')}.`}]},
+{t:'Completing the square', html:`
+  <p>A <b>perfect square trinomial</b> is something like ${m('x^2 + 12x + 36')}, which is the same as ${m('(x + 6)^2')}.</p>
+  <div class="rule">To make ${m('x^2 + bx + c')} a perfect square: <b>halve b, then square it.</b> &nbsp; ${m('c = (b/2)^2')}<br>The trinomial then equals ${m('(x + b/2)^2')}.</div>
+  <p>You can use this to solve an equation: move the plain number to the other side, add ${m('(b/2)^2')} to <b>both</b> sides, then use the Square Root Property.</p>`,
+ ex:{q:`Solve ${m('x^2 + 6x − 7 = 0')} by completing the square.`,
+  steps:[`Move the plain number over: add 7 to both sides. ${m('x^2 + 6x = 7')}.`,`Half of 6 is 3, and ${m('3^2 = 9')}. Add 9 to both sides: ${m('x^2 + 6x + 9 = 16')}.`,`The left side is now a perfect square: ${m('(x + 3)^2 = 16')}.`,`Take the square root of both sides: ${m('x + 3 = ±4')}.`,`Subtract 3: ${m('x = −3 + 4 = 1')} or ${m('x = −3 − 4 = −7')}.`]},
+ checks:[{q:`What value of c makes ${m('x^2 + 12x + c')} a perfect square?`,options:['6','12','36','144'],a:2,why:`Half of 12 is 6, and ${m('6^2 = 36')}. So ${m('x^2 + 12x + 36 = (x + 6)^2')}.`}]},
+{t:'Quadratic Formula and the discriminant', html:`
+  <p>The Quadratic Formula solves <b>any</b> equation of the form ${m('ax^2 + bx + c = 0')}.</p>
+  <div class="rule" style="font-size:1.1em">${m('x = (−b ± √(b^2 − 4ac)) / (2a)')}</div>
+  <p>The part under the root, ${m('b^2 − 4ac')}, is called the <b>discriminant</b>. Work it out first: it tells you what kind of answers to expect.</p>
+  <table><tr><th>Discriminant</th><th>Solutions</th></tr><tr><td>positive</td><td>2 real solutions</td></tr><tr><td>zero</td><td>1 real solution</td></tr><tr><td>negative</td><td>2 complex (imaginary) solutions</td></tr></table>`,
+ ex:{q:`Solve ${m('x^2 − 4x + 13 = 0')}.`,
+  steps:[`Read off the numbers: ${m('a = 1')}, ${m('b = −4')}, ${m('c = 13')}.`,`Discriminant: ${m('b^2 − 4ac = (−4)^2 − 4(1)(13) = 16 − 52 = −36')}.`,`It is negative, so there are <b>two complex solutions</b>.`,`Put the numbers in the formula: ${m('x = (4 ± √(−36)) / 2')}. Note ${m('−b')} is ${m('−(−4) = 4')}.`,`${m('√(−36) = 6i')}, so ${m('x = (4 ± 6i) / 2')}.`,`Divide both parts by 2: ${m('x = 2 ± 3i')}.`]},
+ checks:[{q:`Solve ${m('x^2 + 5x − 3 = 0')} with the Quadratic Formula.`,options:[m('(5 ± √37) / 2'),m('(−5 ± √37) / 2'),m('(−5 ± i√13) / 2'),m('(5 ± √13) / 2')],a:1,why:`${m('a = 1, b = 5, c = −3')}. Discriminant: ${m('25 − 4(1)(−3) = 25 + 12 = 37')}. So ${m('x = (−5 ± √37) / 2')}.`}]},
+{t:'Vertex of a parabola and checking a model', html:`
+  <p>The <b>vertex</b> is the highest or lowest point of a parabola ${m('ax^2 + bx + c')}.</p>
+  <div class="rule"><b>Step 1:</b> the x-value (or time) of the vertex is ${m('−b / (2a)')}.<br><b>Step 2:</b> put that value back into the function to get the height.<br>If ${m('a')} is <b>negative</b> the parabola opens down, so the vertex is a <b>maximum</b>.</div>
+  <div class="rule"><b>Does a model fit the data?</b> Put each x from the table into the function. If every answer matches the table exactly, the fit is perfect and the coefficient of determination is ${m('R^2 = 1')}.</div>`,
+ ex:{q:`A ball's height is ${m('h(t) = −16t^2 + 48t + 5')}. Find and interpret the vertex.`,
+  steps:[`Read off ${m('a = −16')} and ${m('b = 48')}.`,`Time of the vertex: ${m('t = −b / (2a) = −48 / (2 × −16) = −48 / −32 = 1.5')} seconds.`,`Put 1.5 back in: ${m('h(1.5) = −16(1.5)^2 + 48(1.5) + 5')}.`,`${m('(1.5)^2 = 2.25')}, so ${m('−16 × 2.25 = −36')}. And ${m('48 × 1.5 = 72')}.`,`${m('−36 + 72 + 5 = 41')} feet.`,`${m('a')} is negative, so this is a maximum: the ball reaches its <b>highest point, 41 feet, after 1.5 seconds</b>.`]},
+ checks:[{q:`A table has the points (0, 4), (0.5, 16), (1, 20), (1.5, 16), (2, 4). Does ${m('f(x) = −16x^2 + 32x + 4')} fit with ${m('R^2 = 1')}?`,options:['True','False'],a:0,why:`Check each point: f(0) = 4, f(0.5) = −4 + 16 + 4 = 16, f(1) = −16 + 32 + 4 = 20, f(1.5) = −36 + 48 + 4 = 16, f(2) = −64 + 64 + 4 = 4. Every one matches, so the fit is perfect.`}]}
+];
+
+// ---------- REVIEW SHEET: the 27 questions ----------
+function wordQ(q, ans, why){ return {q:q, parts:[{type:'mc',options:WORDS,a:WORDS.indexOf(ans)}], steps:[why]}; }
+const REVIEW=[
+ wordQ(`The expression ${m('b^2 − 4ac')}, which tells us the number and type of solutions of a quadratic equation, is called the …`,'discriminant',`It is the part under the square root in the Quadratic Formula. It "discriminates" between the kinds of solutions.`),
+ wordQ(`If ${m('x^2 = n')}, then ${m('x = ±√n')}. This rule is called the …`,'square root property',`You take the square root of both sides, so it is the Square Root Property.`),
+ wordQ(`The number ${m('i')}, where ${m('i^2 = −1')}, is called the …`,'imaginary unit',`${m('i')} is the imaginary unit. It lets us take the root of a negative number.`),
+ wordQ(`The maximum or minimum point of a parabola is called the …`,'vertex',`The turning point of a parabola is its vertex.`),
+ wordQ(`A number, a variable, or the product of a number and one or more variables with whole-number exponents is called a …`,'monomial',`"Mono" means one. A monomial is a single term, like ${m('−7m^3')}.`),
+ wordQ(`In a polynomial written in standard form, the coefficient of the term with the highest degree is called the …`,'leading coefficient',`In standard form the biggest exponent comes first, so its number "leads".`),
+ {q:`The degree of the polynomial ${m('4x^3 − 8x^6 + 2x − 1')} is …`, parts:[{type:'num',a:'6'}], steps:[`List the exponents: 3, 6, 1 and 0.`,`The biggest is 6 (from ${m('−8x^6')}). The degree is <b>6</b>. It does not matter that this term is not written first.`]},
+ wordQ(`A polynomial made up of exactly three unlike terms is most specifically called a …`,'trinomial',`"Tri" means three. Three terms make a trinomial.`),
+ wordQ(`What happens to the values of ${m('f(x)')} as x approaches positive or negative infinity is called the … of the function.`,'end behavior',`It describes what the two ends of the graph do, so it is the end behavior.`),
+ wordQ(`A value of x for which ${m('f(x) = 0')} is called a … of the function.`,'zero',`A zero is where the function equals 0, which is where the graph crosses the x-axis.`),
+ {q:`Use ${m('f(x) = −3x^4 + 2x^3 − x + 9')}.`, parts:[{type:'num',label:'The degree is',a:'4'},{type:'num',label:'The leading coefficient is',a:'-3'},{type:'num',label:'The value of the function when x = 0 is',a:'9'}],
+  steps:[`The biggest exponent is 4, so the degree is <b>4</b>.`,`The number in front of ${m('x^4')} is <b>−3</b>.`,`Put 0 in for x: ${m('−3(0)^4 + 2(0)^3 − 0 + 9 = 9')}. So ${m('f(0) = 9')}.`]},
+ {q:`Is each expression a polynomial?`, parts:[{type:'mc',label:m('−7m^3'),options:['polynomial','not a polynomial'],a:0},{type:'mc',label:m('3x^-2 + x'),options:['polynomial','not a polynomial'],a:1},{type:'mc',label:m('⅔a^2 − 4a + 1'),options:['polynomial','not a polynomial'],a:0}],
+  steps:[`${m('−7m^3')}: one term with a whole-number exponent. It <b>is</b> a polynomial (a monomial).`,`${m('3x^-2 + x')}: the exponent −2 is negative. It is <b>not</b> a polynomial.`,`${m('⅔a^2 − 4a + 1')}: the fraction is just a number in front. Exponents are 2, 1, 0. It <b>is</b> a polynomial.`]},
+ {q:`What are the solutions of ${m('x^2 + 49 = 0')}?`, parts:[{type:'mc',options:[m('x = ±7'),m('x = ±7i'),m('x = ±49i'),m('x = ±√7')],a:1}], steps:[`Subtract 49 from both sides: ${m('x^2 = −49')}.`,`Take the square root: ${m('x = ±√(−49)')}.`,`The root of a negative number uses ${m('i')}: ${m('√(−49) = 7i')}.`,`Answer: ${m('x = ±7i')}.`]},
+ {q:`Use the square root property to solve ${m('x^2 + 4 = 15')}.`, parts:[{type:'mc',options:[m('x = ±√19'),m('x = ±√15'),m('x = ±√11'),m('x = ±√4')],a:2}], steps:[`Get ${m('x^2')} alone: subtract 4 from both sides. ${m('x^2 = 15 − 4 = 11')}.`,`Take the square root of both sides: ${m('x = ±√11')}.`,`11 is not a perfect square, so leave it as ${m('±√11')}.`]},
+ {q:`Find the value of c that makes ${m('x^2 + 12x + c')} a perfect square, then write the perfect square trinomial.`, parts:[{type:'mc',options:['c = 6, '+m('x^2 + 12x + 6'),'c = 12, '+m('x^2 + 12x + 12'),'c = 144, '+m('x^2 + 12x + 144'),'c = 36, '+m('x^2 + 12x + 36')],a:3}], steps:[`The rule is ${m('c = (b/2)^2')}. Here ${m('b = 12')}.`,`Half of 12 is 6.`,`${m('6^2 = 36')}, so ${m('c = 36')}.`,`${m('x^2 + 12x + 36 = (x + 6)^2')}.`]},
+ {q:`Solve ${m('x^2 + 5x − 3 = 0')} by using the quadratic formula.`, parts:[{type:'mc',options:[m('(5 ± √37) / 2'),m('(−5 ± √37) / 2'),m('(−5 ± i√13) / 2'),m('(5 ± √13) / 2')],a:1}], steps:[`Read off ${m('a = 1')}, ${m('b = 5')}, ${m('c = −3')}.`,`Discriminant: ${m('b^2 − 4ac = 5^2 − 4(1)(−3) = 25 + 12 = 37')}. Careful: minus times minus is plus.`,`Formula: ${m('x = (−b ± √37) / (2a) = (−5 ± √37) / 2')}.`]},
+ {q:`Consider the equation ${m('x^2 − 4x + 13 = 0')}.`, parts:[{type:'num',label:'The value of the discriminant is',a:'-36'},{type:'mc',label:'so the equation has',options:['two real solutions','one real solution','two complex (imaginary) solutions'],a:2}], steps:[`${m('a = 1')}, ${m('b = −4')}, ${m('c = 13')}.`,`${m('b^2 = (−4)^2 = 16')}.`,`${m('4ac = 4 × 1 × 13 = 52')}.`,`Discriminant ${m('= 16 − 52 = −36')}.`,`It is negative, so there are <b>two complex (imaginary) solutions</b>.`]},
+ {q:`Describe the end behavior of ${m('f(x) = −2x^4')}.`, parts:[{type:'mc',label:'As x → −∞, f(x) →',options:['∞','−∞'],a:1},{type:'mc',label:'As x → ∞, f(x) →',options:['∞','−∞'],a:1}], steps:[`The exponent 4 is <b>even</b>: both ends go the same way.`,`The number in front, −2, is <b>negative</b>: both ends go down.`,`So ${m('f(x) → −∞')} on the left and ${m('f(x) → −∞')} on the right.`]},
+ {q:`For which function does the range only include values of ${m('f(x)')} that are less than or equal to zero?`, parts:[{type:'mc',options:[m('f(x) = x^6'),m('f(x) = −x^6'),m('f(x) = x^3'),m('f(x) = −x^3')],a:1}], steps:[`An even power like ${m('x^6')} is never negative, so its range is ${m('f(x) ≥ 0')}.`,`Put a minus in front and it flips: ${m('−x^6')} is never positive, so its range is ${m('f(x) ≤ 0')}.`,`Odd powers (${m('x^3')}, ${m('−x^3')}) go from −∞ to ∞, so their range is all real numbers.`]},
+ {q:`Given ${m('f(x) = x^3 − 27')}, a real zero is located at x = …`, parts:[{type:'num',a:'3'}], steps:[`A zero is where ${m('f(x) = 0')}: ${m('x^3 − 27 = 0')}.`,`Add 27 to both sides: ${m('x^3 = 27')}.`,`Take the cube root: ${m('x = 3')}, because 3 × 3 × 3 = 27.`]},
+ {q:`The table is for ${m('f(x) = x^4 − 10')}. Tick every interval where a zero is located.<table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>f(x)</th><td>6</td><td>−9</td><td>−10</td><td>−9</td><td>6</td></tr></table>`, parts:[{type:'multi',options:['between −2 and −1','between −1 and 0','between 0 and 1','between 1 and 2'],a:[0,3]}], steps:[`A zero is where ${m('f(x)')} changes sign, because the graph has to cross the x-axis there.`,`From ${m('x = −2')} to ${m('−1')}: 6 to −9. Positive to negative, so there is a zero <b>between −2 and −1</b>.`,`From −1 to 0 and from 0 to 1 the values stay negative. No zero.`,`From ${m('x = 1')} to ${m('2')}: −9 to 6. Negative to positive, so there is a zero <b>between 1 and 2</b>.`]},
+ {q:`What is the sum? ${m('(5x^3 − 3x^2 + 6x + 9) + (4x^3 + 7x^2 − 2x − 15)')}`, parts:[{type:'mc',options:[m('9x^3 + 10x^2 + 4x − 6'),m('9x^3 − 10x^2 + 8x + 24'),m('9x^3 + 4x^2 + 4x − 6'),m('9x^3 + 4x^2 − 4x + 6')],a:2}], steps:[`${m('x^3')}: 5 + 4 = 9.`,`${m('x^2')}: −3 + 7 = 4.`,`${m('x')}: 6 − 2 = 4.`,`Numbers: 9 − 15 = −6.`,`Answer: ${m('9x^3 + 4x^2 + 4x − 6')}.`]},
+ {q:`Multiply ${m('4x^2(2x^3 + 5x^2 − 6x + 3)')}. Fill in the numbers: ${m('__x^5 + __x^4 − __x^3 + __x^2')}`, parts:[{type:'num',label:'number in front of x⁵',a:'8'},{type:'num',label:'number in front of x⁴',a:'20'},{type:'num',label:'number after the minus, in front of x³',a:'24'},{type:'num',label:'number in front of x²',a:'12'}], steps:[`Multiply ${m('4x^2')} by each term. Multiply the numbers and add the exponents.`,`${m('4x^2 · 2x^3 = 8x^5')}`,`${m('4x^2 · 5x^2 = 20x^4')}`,`${m('4x^2 · (−6x) = −24x^3')}. The minus is already written, so the blank is 24.`,`${m('4x^2 · 3 = 12x^2')}`]},
+ {q:`Determine the quotient: ${m('(36x^9 + 24x^3) ÷ (6x^3)')}. The answer has the form ${m('__x^{__} + __')}`, parts:[{type:'num',label:'number in front of x',a:'6'},{type:'num',label:'exponent of x',a:'6'},{type:'num',label:'the number added on',a:'4'}], steps:[`Divide each term by ${m('6x^3')}. Divide the numbers and subtract the exponents.`,`${m('36x^9 ÷ 6x^3')}: 36 ÷ 6 = 6, and 9 − 3 = 6. That is ${m('6x^6')}.`,`${m('24x^3 ÷ 6x^3')}: 24 ÷ 6 = 4, and 3 − 3 = 0, so no x. That is 4.`,`Quotient: ${m('6x^6 + 4')}.`]},
+ {q:`Omar recorded the height of a ball. True or false: he could use ${m('f(x) = −16x^2 + 32x + 4')} to model the data because the coefficient of determination is equal to 1.<table><tr><th>x</th><td>0</td><td>0.5</td><td>1</td><td>1.5</td><td>2</td></tr><tr><th>f(x)</th><td>4</td><td>16</td><td>20</td><td>16</td><td>4</td></tr></table>`, parts:[{type:'mc',options:['True','False'],a:0}], steps:[`${m('R^2 = 1')} means every point sits exactly on the curve. So test each x.`,`${m('f(0) = 4')} ✓`,`${m('f(0.5) = −16(0.25) + 16 + 4 = −4 + 16 + 4 = 16')} ✓`,`${m('f(1) = −16 + 32 + 4 = 20')} ✓`,`${m('f(1.5) = −16(2.25) + 48 + 4 = −36 + 48 + 4 = 16')} ✓`,`${m('f(2) = −64 + 64 + 4 = 4')} ✓`,`All five match, so the fit is perfect. <b>True.</b>`]},
+ {q:`Karim's sign has length ${m('(5x + 3)')} and width ${m('(2x + 4)')}. Which expression represents the area?`, parts:[{type:'mc',options:[m('10x^2 + 12'),m('10x^2 + 26x + 12'),m('10x^2 + 26x + 7'),m('10x^2 + 8x + 12')],a:1}], steps:[`Area = length × width = ${m('(5x + 3)(2x + 4)')}.`,`${m('5x · 2x = 10x^2')}`,`${m('5x · 4 = 20x')}`,`${m('3 · 2x = 6x')}`,`${m('3 · 4 = 12')}`,`Add like terms: 20x + 6x = 26x. Area = ${m('10x^2 + 26x + 12')}.`]},
+ {q:`A ball's height after t seconds is ${m('h(t) = −16t^2 + 48t + 5')}. Find and interpret the vertex.`, parts:[{type:'num',label:'The ball reaches a maximum height of … feet',a:'41'},{type:'num',label:'… second(s) after it is thrown',a:'1.5'}], steps:[`${m('a = −16')}, ${m('b = 48')}.`,`Time: ${m('t = −b / (2a) = −48 / (2 × −16) = −48 / −32 = 1.5')} seconds.`,`Height: ${m('h(1.5) = −16(1.5)^2 + 48(1.5) + 5')}.`,`${m('(1.5)^2 = 2.25')}; ${m('−16 × 2.25 = −36')}; ${m('48 × 1.5 = 72')}.`,`${m('−36 + 72 + 5 = 41')} feet.`,`Vertex = (1.5, 41). Since ${m('a')} is negative the parabola opens down, so this is the maximum height.`]}
+];
+
+// ---------- RANDOM QUESTIONS (used by Extra practice and by the Test) ----------
+// Every generator works out its answer and then re-checks it a second way (the "ok" value),
+// so a question is only ever shown if its answer is really correct.
+function mcFrom(correct, wrongs){ const opts=shuffle([correct].concat(wrongs.filter((w,i,a)=>w!==correct&&a.indexOf(w)===i).slice(0,3))); return {type:'mc',options:opts,a:opts.indexOf(correct)}; }
+function ev(terms,x){ return terms.reduce((s,t)=>s+t[0]*Math.pow(x,t[1]),0); }
+function near(a,b){ return Math.abs(a-b)<1e-6; }
+const SUP=n=>String(n).split('').map(d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d]).join('');
+const GEN={
+ 'Degree and leading coefficient':()=>{ const exps=shuffle([1,2,3,4,5,6,7]).slice(0,3); const terms=exps.map(e=>[pick([-9,-7,-5,-4,-3,-2,2,3,4,5,6,8]),e]).concat([[ri(1,9),0]]); const top=terms.slice().sort((a,b)=>b[1]-a[1])[0];
+   return {ok:terms.every(t=>t[1]<=top[1]), q:`For ${m('f(x) = '+poly(terms))}:`, parts:[{type:'num',label:'The degree is',a:''+top[1]},{type:'num',label:'The leading coefficient is',a:''+top[0]}], steps:[`The exponents are ${terms.map(t=>t[1]).join(', ')}.`,`The biggest is ${top[1]}, so the degree is <b>${top[1]}</b>.`,`The term with that exponent is ${m(poly([top]))}. The number in front is <b>${neg(top[0])}</b>.`]}; },
+ 'Is it a polynomial?':()=>{ const a=ri(2,9), n=ri(2,5), b=ri(1,9);
+   const c=pick([{e:`${a}x^${n} + ${b}x − 1`,yes:true,why:`Every exponent is a whole number (${n}, 1 and 0), so it <b>is</b> a polynomial.`},{e:`−${a}m^${n}`,yes:true,why:`One term with a whole-number exponent. It <b>is</b> a polynomial (a monomial).`},{e:`⅔x^2 − ${a}x + ${b}`,yes:true,why:`A fraction as the number in front is allowed. The exponents are 2, 1 and 0, so it <b>is</b> a polynomial.`},
+     {e:`${a}x^-${n} + x`,yes:false,why:`It has a negative exponent (−${n}). Polynomials only have whole-number exponents, so it is <b>not</b> a polynomial.`},{e:`${a}/x + ${b}`,yes:false,why:`The variable is on the bottom of a fraction. That is <b>not</b> a polynomial.`},{e:`√x − ${b}`,yes:false,why:`The variable is under a square root. That is <b>not</b> a polynomial.`}]);
+   return {ok:true, q:`Is ${m(c.e)} a polynomial?`, parts:[{type:'mc',options:['polynomial','not a polynomial'],a:c.yes?0:1}], steps:[`Check for three things: a negative exponent, a variable on the bottom of a fraction, or a variable under a root.`,c.why]}; },
+ 'End behavior':()=>{ const n=ri(2,7), a=pick([-5,-3,-2,-1,1,2,4]); const even=n%2===0, pos=a>0; const left=even?(pos?'∞':'−∞'):(pos?'−∞':'∞'), right=pos?'∞':'−∞';
+   return {ok:(a*Math.pow(-50,n)>0)===(left==='∞') && (a*Math.pow(50,n)>0)===(right==='∞'), q:`Describe the end behavior of ${m('f(x) = '+poly([[a,n]]))}.`, parts:[{type:'mc',label:'As x → −∞, f(x) →',options:['∞','−∞'],a:left==='∞'?0:1},{type:'mc',label:'As x → ∞, f(x) →',options:['∞','−∞'],a:right==='∞'?0:1}],
+    steps:[`The exponent ${n} is <b>${even?'even':'odd'}</b>, so the two ends go ${even?'the same way':'opposite ways'}.`,`The number in front is <b>${pos?'positive':'negative'}</b>, so the right end goes ${pos?'up (∞)':'down (−∞)'}.`,`${even?'Even: the left end does the same as the right.':'Odd: the left end does the opposite of the right.'} Left: ${m('f(x) → '+left)}, right: ${m('f(x) → '+right)}.`]}; },
+ 'Real zero of a power function':()=>{ const k=ri(2,5), plus=Math.random()<0.4, c=k*k*k, z=plus?-k:k;
+   return {ok:near(z*z*z+(plus?c:-c),0), q:`Given ${m('f(x) = x^3 '+(plus?'+ ':'− ')+c)}, a real zero is located at x = …`, parts:[{type:'num',a:''+z}],
+    steps:[`A zero is where ${m('f(x) = 0')}: ${m('x^3 '+(plus?'+ ':'− ')+c+' = 0')}.`,`${plus?'Subtract':'Add'} ${c} ${plus?'from':'to'} both sides: ${m('x^3 = '+neg(plus?-c:c))}.`,`Take the cube root: ${m('x = '+neg(z))}, because ${par(z)} × ${par(z)} × ${par(z)} = ${neg(plus?-c:c)}.`]}; },
+ 'Zeros from a table':()=>{ const sq=Math.random()<0.5; const c=sq?pick([2,3,5,6,7,8]):pick([2,3,4,5,6,7,9,10,12,15,20]); const xs=sq?[-3,-2,-1,0,1,2,3]:[-1,0,1,2,3]; const f=x=>(sq?x*x:x*x*x)-c; const ys=xs.map(f);
+   const opts=[], right=[]; for(let i=0;i<xs.length-1;i++){ opts.push('between '+neg(xs[i])+' and '+neg(xs[i+1])); if(ys[i]*ys[i+1]<0) right.push(i); }
+   const steps=[`A zero is where ${m('f(x)')} changes sign, because the graph has to cross the x-axis there.`,`Read the signs from left to right: ${ys.map(y=>y>0?'+':'−').join(', ')}.`];
+   right.forEach(i=>steps.push(`From ${m('x = '+neg(xs[i]))} to ${m('x = '+neg(xs[i+1]))} the value goes from ${neg(ys[i])} to ${neg(ys[i+1])}. The sign changes, so there is a zero <b>${opts[i]}</b>.`));
+   steps.push(`Everywhere else the sign stays the same, so there is no zero there.`);
+   return {ok:right.length>0 && ys.every(y=>y!==0), q:`The table is for ${m('f(x) = '+(sq?'x^2':'x^3')+' − '+c)}. Tick every interval where a zero is located.<table><tr><th>x</th>${xs.map(x=>'<td>'+neg(x)+'</td>').join('')}</tr><tr><th>f(x)</th>${ys.map(y=>'<td>'+neg(y)+'</td>').join('')}</tr></table>`, parts:[{type:'multi',options:opts,a:right}], steps}; },
+ 'Add polynomials':()=>{ const A=[3,2,1,0].map(e=>[ri(-9,9)||2,e]), B=[3,2,1,0].map(e=>[ri(-9,9)||-3,e]); const Sum=A.map((t,i)=>t[0]+B[i][0]); const R=Sum.map((c,i)=>[c,3-i]);
+   return {ok:[2,-3].every(x=>near(ev(A,x)+ev(B,x),ev(R,x))), q:`Add: ${m('('+poly(A)+') + ('+poly(B)+')')}. Give the number for each term (use − for negatives, 0 if it cancels).`, parts:['x³','x²','x','plain number'].map((l,i)=>({type:'num',label:(i<3?'number in front of '+l:'the '+l),a:''+Sum[i]})),
+    steps:['x^3','x^2','x','numbers'].map((l,i)=>`${i<3?m(l):'Plain numbers'}: ${par(A[i][0])} + ${par(B[i][0])} = <b>${neg(Sum[i])}</b>.`).concat([`Answer: ${m(poly(R))}.`])}; },
+ 'Subtract polynomials':()=>{ const A=[2,1,0].map(e=>[ri(-9,9)||4,e]), B=[2,1,0].map(e=>[ri(-9,9)||-2,e]); const D=A.map((t,i)=>t[0]-B[i][0]); const R=D.map((c,i)=>[c,2-i]); const F=B.map(t=>[-t[0],t[1]]);
+   return {ok:[2,-3].every(x=>near(ev(A,x)-ev(B,x),ev(R,x))), q:`Subtract: ${m('('+poly(A)+') − ('+poly(B)+')')}. Give the number for each term (use − for negatives, 0 if it cancels).`, parts:['x²','x','plain number'].map((l,i)=>({type:'num',label:(i<2?'number in front of '+l:'the '+l),a:''+D[i]})),
+    steps:[`Flip the sign of every term in the second polynomial: it becomes ${m(poly(F))}.`,`Now add. ${m('x^2')}: ${par(A[0][0])} + ${par(F[0][0])} = <b>${neg(D[0])}</b>.`,`${m('x')}: ${par(A[1][0])} + ${par(F[1][0])} = <b>${neg(D[1])}</b>.`,`Plain numbers: ${par(A[2][0])} + ${par(F[2][0])} = <b>${neg(D[2])}</b>.`,`Answer: ${m(poly(R))}.`]}; },
+ 'Multiply by a monomial':()=>{ const k=ri(2,6), ke=ri(1,3); const T=[[ri(2,6),ri(2,4)],[pick([-5,-4,-3,-2,2,3,4,5]),1],[ri(1,7),0]]; const R=T.map(t=>[t[0]*k,t[1]+ke]);
+   return {ok:[2,-3].every(x=>near(ev([[k,ke]],x)*ev(T,x),ev(R,x))), q:`Multiply ${m(poly([[k,ke]])+'('+poly(T)+')')}. Give the number in front of each term (use − for negatives).`, parts:R.map(t=>({type:'num',label:'number in front of x'+SUP(t[1]),a:''+t[0]})),
+    steps:[`Multiply ${m(poly([[k,ke]]))} by each term: multiply the numbers, add the exponents.`].concat(T.map((t,i)=>`${m(poly([[k,ke]])+' · '+(t[0]<0?'('+poly([t])+')':poly([t])))}: ${k} × ${par(t[0])} = ${neg(t[0]*k)}, and ${ke} + ${t[1]} = ${t[1]+ke}. That gives ${m(poly([R[i]]))}.`)).concat([`Answer: ${m(poly(R))}.`])}; },
+ 'Multiply two binomials':()=>{ const a=ri(1,6), c=ri(1,6), b=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7]), d=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7]); const A=[[a,1],[b,0]], B=[[c,1],[d,0]], R=[[a*c,2],[a*d+b*c,1],[b*d,0]];
+   return {ok:[2,-3].every(x=>near(ev(A,x)*ev(B,x),ev(R,x))), q:`Multiply ${m('('+poly(A)+')('+poly(B)+')')}. Give the number for each term (use − for negatives, 0 if it cancels).`, parts:[{type:'num',label:'number in front of x²',a:''+R[0][0]},{type:'num',label:'number in front of x',a:''+R[1][0]},{type:'num',label:'the plain number',a:''+R[2][0]}],
+    steps:[`Multiply every term in the first bracket by every term in the second.`,`${m(poly([[a,1]])+' · '+poly([[c,1]])+' = '+poly([[a*c,2]]))}`,`${m(poly([[a,1]])+' · '+par(d)+' = '+poly([[a*d,1]]))}`,`${m(par(b)+' · '+poly([[c,1]])+' = '+poly([[b*c,1]]))}`,`${m(par(b)+' · '+par(d)+' = '+neg(b*d))}`,`Add the x terms: ${neg(a*d)} + ${par(b*c)} = <b>${neg(a*d+b*c)}</b>. Answer: ${m(poly(R))}.`]}; },
+ 'Divide by a monomial':()=>{ const k=ri(2,6), n=ri(2,4), p=ri(2,7), q=ri(2,9), big=n+ri(2,5); const N=[[k*p,big],[k*q,n]], Dn=[[k,n]], R=[[p,big-n],[q,0]];
+   return {ok:[2,3].every(x=>near(ev(N,x)/ev(Dn,x),ev(R,x))), q:`Find the quotient: ${m('('+poly(N)+') ÷ ('+poly(Dn)+')')}. The answer has the form ${m('__x^{__} + __')}`, parts:[{type:'num',label:'number in front of x',a:''+p},{type:'num',label:'exponent of x',a:''+(big-n)},{type:'num',label:'the number added on',a:''+q}],
+    steps:[`Divide each term by ${m(poly(Dn))}: divide the numbers, subtract the exponents.`,`First term: ${k*p} ÷ ${k} = ${p}, and ${big} − ${n} = ${big-n}. That is ${m(poly([[p,big-n]]))}.`,`Second term: ${k*q} ÷ ${k} = ${q}, and ${n} − ${n} = 0, so no x is left. That is ${q}.`,`Quotient: ${m(poly(R))}.`]}; },
+ 'Square Root Property':()=>{ const a=ri(1,12); const kind=pick(['root','square','imag']); const n=kind==='root'?pick([2,3,5,6,7,10,11,13,14,15,17,19]):pick([4,9,16,25,36,49,64,81]); const k=Math.sqrt(n);
+   const b=kind==='imag'? a-n : a+n; const ans=kind==='root'?`x = ±√${n}`:kind==='square'?`x = ±${k}`:`x = ±${k}i`;
+   const wr=kind==='imag'?[`x = ±${k}`,`x = ±${n}i`,`x = ±√${k}`]:kind==='square'?[`x = ±${k}i`,`x = ±${n}`,`x = ±√${a+b}`]:[`x = ±√${a+b}`,`x = ±√${b}`,`x = ±${n}`];
+   const sq=kind==='imag'?-n:n;   // the value of x squared for the answer
+   return {ok:sq+a===b && Number.isInteger(k)===(kind!=='root'), q:`Solve ${m('x^2 + '+a+' = '+neg(b))}.`, parts:[mcFrom(m(ans),wr.map(m))],
+    steps:[`Get ${m('x^2')} alone: subtract ${a} from both sides. ${m('x^2 = '+neg(b)+' − '+a+' = '+neg(b-a))}.`,`Take the square root of both sides: ${m('x = ±√('+neg(b-a)+')')}.`,kind==='root'?`${n} is not a perfect square, so leave it: ${m(ans)}.`:kind==='square'?`${m('√'+n+' = '+k)}, so ${m(ans)}.`:`The number is negative, so use ${m('i')}: ${m('√'+n+' = '+k)}, so ${m('√(−'+n+') = '+k+'i')}. Answer: ${m(ans)}.`]}; },
+ 'Completing the square (find c)':()=>{ const h=ri(1,12)*pick([1,1,-1]), b=2*h;
+   return {ok:[2,-3].every(x=>near(x*x+b*x+h*h,(x+h)*(x+h))), q:`What value of c makes ${m('x^2 '+sgn(b)+'x + c')} a perfect square?`, parts:[{type:'num',label:'c =',a:''+h*h}], steps:[`Use ${m('c = (b/2)^2')}. Here ${m('b = '+neg(b))}.`,`Half of ${neg(b)} is ${neg(h)}.`,`${m(par(h)+'^2 = '+h*h)}, so <b>c = ${h*h}</b>.`,`Check: ${m('x^2 '+sgn(b)+'x + '+h*h+' = (x '+sgn(h)+')^2')}.`]}; },
+ 'Solve by completing the square':()=>{ const h=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]); let k=ri(1,7); if(k===Math.abs(h)) k++; const b=2*h, c=h*h-k*k, lo=-h-k, hi=-h+k; const E=[[1,2],[b,1],[c,0]];
+   return {ok:near(ev(E,lo),0)&&near(ev(E,hi),0)&&c!==0, q:`Solve ${m(poly(E)+' = 0')} by completing the square. Give the two solutions.`, parts:[{type:'num',label:'smaller solution',a:''+lo},{type:'num',label:'bigger solution',a:''+hi}],
+    steps:[`Move the plain number to the other side: ${m('x^2 '+sgn(b)+'x = '+neg(-c))}.`,`Half of ${neg(b)} is ${neg(h)}, and ${m(par(h)+'^2 = '+h*h)}. Add ${h*h} to both sides: ${m('x^2 '+sgn(b)+'x + '+h*h+' = '+neg(-c)+' + '+h*h+' = '+k*k)}.`,`The left side is a perfect square: ${m('(x '+sgn(h)+')^2 = '+k*k)}.`,`Take the square root of both sides: ${m('x '+sgn(h)+' = ±'+k)}.`,`${h>0?'Subtract '+h:'Add '+(-h)}: ${m('x = '+neg(-h)+' + '+k+' = '+neg(hi))} or ${m('x = '+neg(-h)+' − '+k+' = '+neg(lo))}.`]}; },
+ 'Discriminant':()=>{ const a=ri(1,4), b=ri(-8,8), c=ri(-6,9)||1, D=b*b-4*a*c; const typ=D>0?0:D===0?1:2;
+   return {ok:D===b*b-4*a*c && typ===(D>0?0:D===0?1:2), q:`For ${m(poly([[a,2],[b,1],[c,0]])+' = 0')}:`, parts:[{type:'num',label:'The discriminant is',a:''+D},{type:'mc',label:'so the equation has',options:['two real solutions','one real solution','two complex (imaginary) solutions'],a:typ}],
+    steps:[`Read off ${m('a = '+a)}, ${m('b = '+neg(b))}, ${m('c = '+neg(c))}.`,`${m('b^2 = '+par(b)+'^2 = '+b*b)}.`,`${m('4ac = 4 × '+a+' × '+par(c)+' = '+neg(4*a*c))}.`,`Discriminant ${m('= '+b*b+' − '+par(4*a*c)+' = '+neg(D))}.`,`It is <b>${D>0?'positive':D===0?'zero':'negative'}</b>, so there ${D>0?'are two real solutions':D===0?'is one real solution':'are two complex (imaginary) solutions'}.`]}; },
+ 'Quadratic Formula':()=>{ let r1=ri(-7,7), r2=ri(-7,7); if(r1===r2) r2=r1+2; const b=-(r1+r2), c=r1*r2, D=b*b-4*c, s=Math.sqrt(D), lo=Math.min(r1,r2), hi=Math.max(r1,r2); const E=[[1,2],[b,1],[c,0]];
+   return {ok:near(ev(E,lo),0)&&near(ev(E,hi),0)&&Number.isInteger(s), q:`Solve ${m(poly(E)+' = 0')} with the Quadratic Formula. Give the two solutions.`, parts:[{type:'num',label:'smaller solution',a:''+lo},{type:'num',label:'bigger solution',a:''+hi}],
+    steps:[`Read off ${m('a = 1')}, ${m('b = '+neg(b))}, ${m('c = '+neg(c))}.`,`Discriminant: ${m('b^2 − 4ac = '+b*b+' − '+par(4*c)+' = '+D)}.`,`${m('√'+D+' = '+s)}.`,`Formula: ${m('x = (−b ± √'+D+') / (2a) = ('+neg(-b)+' ± '+s+') / 2')}.`,`With plus: ${m('('+neg(-b)+' + '+s+') / 2 = '+neg(hi))}. With minus: ${m('('+neg(-b)+' − '+s+') / 2 = '+neg(lo))}.`]}; },
+ 'Vertex (projectile)':()=>{ const b=pick([32,48,64,80,96]), c=ri(2,9), t=b/32, f=x=>-16*x*x+b*x+c, h=f(t);
+   return {ok:h>f(t-0.25)&&h>f(t+0.25), q:`A ball's height after t seconds is ${m('h(t) = −16t^2 + '+b+'t + '+c)}. Find the vertex.`, parts:[{type:'num',label:'Maximum height (feet)',a:''+h},{type:'num',label:'Time it happens (seconds)',a:''+t}],
+    steps:[`Read off ${m('a = −16')} and ${m('b = '+b)}.`,`Time: ${m('t = −b / (2a) = −'+b+' / (2 × −16) = −'+b+' / −32 = '+t)} seconds.`,`Put it back in: ${m('h('+t+') = −16('+t+')^2 + '+b+'('+t+') + '+c)}.`,`${m('('+t+')^2 = '+t*t)}, so ${m('−16 × '+t*t+' = '+neg(-16*t*t))}. And ${m(b+' × '+t+' = '+b*t)}.`,`${m(neg(-16*t*t)+' + '+b*t+' + '+c+' = '+h)} feet.`,`${m('a')} is negative, so this is the maximum: <b>${h} feet after ${t} seconds</b>.`]}; },
+ 'Does the model fit?':()=>{ const b=pick([32,48,64]), c=ri(2,8), xs=[0,0.5,1,1.5,2], f=x=>-16*x*x+b*x+c; const real=xs.map(f), tab=real.slice(); const fake=Math.random()<0.5; let bad=-1; if(fake){ bad=ri(1,3); tab[bad]+=pick([-3,-2,2,3]); }
+   const steps=[`${m('R^2 = 1')} means every point in the table sits exactly on the curve. So put each x into the function.`].concat(xs.map((x,i)=>`${m('f('+x+') = −16('+x+')^2 + '+b+'('+x+') + '+c+' = '+real[i])}. The table says ${tab[i]}. ${real[i]===tab[i]?'✓ It matches.':'✗ It does <b>not</b> match.'}`));
+   steps.push(fake?`One point is not on the curve, so the fit is not perfect. <b>False.</b>`:`All five match, so the fit is perfect. <b>True.</b>`);
+   return {ok:real.every((v,i)=>v===tab[i])===!fake, q:`The table shows the height of a ball. True or false: ${m('f(x) = −16x^2 + '+b+'x + '+c)} models the data with a coefficient of determination equal to 1.<table><tr><th>x</th>${xs.map(x=>'<td>'+x+'</td>').join('')}</tr><tr><th>f(x)</th>${tab.map(y=>'<td>'+y+'</td>').join('')}</tr></table>`, parts:[{type:'mc',options:['True','False'],a:fake?1:0}], steps}; }
+};
+// only hand out a question once its double-check has passed
+function makeQ(name){ for(let i=0;i<50;i++){ const Q=GEN[name](); if(Q.ok===true) return Q; } throw new Error('could not build a checked question: '+name); }
+// which random questions belong to which Learn topic (same order as the lessons)
+const TOPIC_GENS=[['Degree and leading coefficient','Is it a polynomial?'],['End behavior','Real zero of a power function'],['Zeros from a table'],['Add polynomials','Subtract polynomials'],['Multiply by a monomial','Multiply two binomials'],['Divide by a monomial'],['Square Root Property'],['Completing the square (find c)','Solve by completing the square'],['Discriminant','Quadratic Formula'],['Vertex (projectile)','Does the model fit?']];
+function buildTest(){ const out=[]; TOPIC_GENS.forEach((g,t)=>{ [g[0],g[1]||g[0]].forEach(n=>{ const Q=makeQ(n); Q.topic=t; Q.skill=n; out.push(Q); }); }); return shuffle(out); }
+// the message shown for a test score (pct is 0 to 100)
+function verdict(pct){ return pct===100?{k:'perfect',t:"You're ready!",d:'Every question right. Keep it fresh with a little practice before the exam.'}
+  : pct>=95?{k:'ready',t:"You're ready!",d:'Almost perfect. You can still improve on:'}
+  : pct>=75?{k:'close',t:'Good work, nearly there.',d:'You are having a little trouble with:'}
+  : pct>0?{k:'revise',t:'Keep going.',d:'Topics you should revise again:'}
+  : {k:'zero',t:'Revise again.',d:'Go back through all 10 topics in Learn, one at a time, then take the test again.'}; }
+
+// ---------- page code (runs only in a browser) ----------
+if (typeof document !== 'undefined') {
+  const $=(s,r)=> (r||document).querySelector(s);
+  const store={ get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }, set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} } };
+  const TABS=['learn','practice','extra','test','sheet'];
+  function go(tab){ document.querySelectorAll('nav button[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab===tab)); TABS.forEach(id=>$('#'+id).classList.toggle('hide',id!==tab)); window.scrollTo(0,0); }
+
+  // ----- sound effects (made with the browser's own sound generator, no files needed) -----
+  let actx=null, muted=store.get('alg2_muted',false);
+  function tone(f,t0,d,type,v){ if(muted) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume();
+      const o=actx.createOscillator(), g=actx.createGain(), s=actx.currentTime+t0; o.type=type||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,s); g.gain.exponentialRampToValueAtTime(v||0.18,s+0.015); g.gain.exponentialRampToValueAtTime(0.0001,s+d);
+      o.connect(g); g.connect(actx.destination); o.start(s); o.stop(s+d+0.03); }catch(e){} }
+  const SFX={ right(){tone(660,0,.12);tone(880,.1,.2);}, wrong(){tone(220,0,.16,'sawtooth',.1);tone(165,.14,.24,'sawtooth',.1);}, tick(){tone(1200,0,.05,'triangle',.12);tone(1600,.05,.07,'triangle',.1);}, untick(){tone(500,0,.06,'triangle',.1);},
+    click(){tone(700,0,.03,'triangle',.06);}, step(){tone(900,0,.04,'sine',.07);}, unlock(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.2));},
+    perfect(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.12,.25));tone(1568,.62,.6);}, good(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.13,.22));}, okay(){[440,554,659].forEach((f,i)=>tone(f,i*.14,.22));}, low(){[392,330,262].forEach((f,i)=>tone(f,i*.17,.28,'triangle'));} };
+  const sb=$('#sound'); function paintSound(){ sb.textContent=muted?'Sound: off':'Sound: on'; sb.setAttribute('aria-pressed',String(!muted)); }
+  sb.onclick=()=>{ muted=!muted; store.set('alg2_muted',muted); paintSound(); SFX.click(); }; paintSound();
+  document.querySelectorAll('nav button[data-tab]').forEach(b=>b.onclick=()=>{ SFX.click(); go(b.dataset.tab); });
+
+  // one question widget, used everywhere. onDone(correct, whatYouAnswered) is called after Check.
+  // opts.test = true hides the steps until the test is over.
+  function renderQuestion(box, Q, onDone, opts){
+    opts=opts||{}; box.innerHTML='';
+    const q=document.createElement('div'); q.className='q'; q.innerHTML=Q.q; box.appendChild(q);
+    const state=Q.parts.map(p=>p.type==='multi'?[]:null), els=[];
+    Q.parts.forEach((p,pi)=>{
+      const wrap=document.createElement('div'); wrap.className='part';
+      if(p.label){ const l=document.createElement('label'); l.innerHTML=p.label; wrap.appendChild(l); }
+      if(p.type==='num'){ const inp=document.createElement('input'); inp.type='text'; inp.setAttribute('aria-label',p.label?p.label.replace(/<[^>]+>/g,''):'your answer'); inp.placeholder='type here';
+        inp.oninput=()=>{state[pi]=inp.value;}; inp.onkeydown=e=>{ if(e.key==='Enter') check.click(); }; wrap.appendChild(inp); els.push(inp); }
+      else { const g=document.createElement('div'); g.className='opts'; const btns=[];
+        p.options.forEach((o,oi)=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML=o;
+          b.onclick=()=>{ if(check.disabled) return; SFX.click();
+            if(p.type==='multi'){ const k=state[pi].indexOf(oi); if(k<0) state[pi].push(oi); else state[pi].splice(k,1); b.classList.toggle('sel'); }
+            else { state[pi]=oi; btns.forEach(x=>x.classList.toggle('sel',x===b)); } };
+          g.appendChild(b); btns.push(b); });
+        wrap.appendChild(g); els.push(btns); }
+      box.appendChild(wrap);
+    });
+    const check=document.createElement('button'); check.className='btn'; check.textContent='Check my answer';
+    const show=document.createElement('button'); show.className='btn ghost'; show.textContent='Show me the steps';
+    const msg=document.createElement('div'); const steps=document.createElement('ol'); steps.className='steps';
+    box.appendChild(check); if(!opts.test) box.appendChild(show); box.appendChild(msg); box.appendChild(steps);
+    let shown=0;
+    function nextStep(all){ do { if(shown>=Q.steps.length) break; const li=document.createElement('li'); li.innerHTML=Q.steps[shown++]; steps.appendChild(li); } while(all);
+      show.textContent = shown>=Q.steps.length ? 'All steps shown' : 'Show the next step'; show.disabled = shown>=Q.steps.length; }
+    show.onclick=()=>{ SFX.step(); nextStep(false); };
+    check.onclick=()=>{
+      if(Q.parts.some((p,pi)=> p.type==='multi' ? state[pi].length===0 : (state[pi]===null||state[pi]===''))){ msg.className='msg bad'; msg.textContent='Answer every part first.'; return; }
+      let all=true; const given=[];
+      Q.parts.forEach((p,pi)=>{ let ok;
+        if(p.type==='num'){ ok=sameNum(state[pi],p.a); els[pi].classList.add(ok?'right':'wrong'); els[pi].disabled=true; given.push(String(state[pi]).replace(/[<>&]/g,'')); }
+        else if(p.type==='multi'){ const s=state[pi].slice().sort().join(','), a=p.a.slice().sort().join(','); ok=s===a; els[pi].forEach((b,oi)=>{ if(p.a.includes(oi)) b.classList.add('right'); else if(state[pi].includes(oi)) b.classList.add('wrong'); }); given.push(state[pi].slice().sort().map(i=>p.options[i]).join(' and ')); }
+        else { ok=state[pi]===p.a; els[pi].forEach((b,oi)=>{ if(oi===p.a) b.classList.add('right'); else if(oi===state[pi]) b.classList.add('wrong'); }); given.push(p.options[state[pi]]); }
+        if(!ok) all=false; });
+      check.disabled=true; if(all) SFX.right(); else SFX.wrong();
+      msg.className='msg '+(all?'good':'bad');
+      msg.innerHTML= all ? 'Correct!' : opts.test ? 'Not quite. You will see the full working at the end of the test.' : 'Not quite. The right answer is ' + answerText(Q) + '. Read the steps below.';
+      if(!all && !opts.test) nextStep(true);
+      if(onDone) onDone(all, given.join(', '));
+    };
+  }
+  function answerText(Q){ return Q.parts.map(p=> p.type==='num' ? '<b>'+neg(parseFloat(p.a))+'</b>' : p.type==='multi' ? '<b>'+p.a.map(i=>p.options[i]).join(' and ')+'</b>' : '<b>'+p.options[p.a]+'</b>').join(', '); }
+
+  // ----- LEARN, with a tick box on every topic -----
+  let ticks=store.get('alg2_ticks',{}); const allTicked=()=>LESSONS.every((_,i)=>ticks[i]); let paintTest=()=>{};
+  const topicEls=[];
+  (function(){ const root=$('#learn');
+    const intro=document.createElement('div'); intro.className='card';
+    intro.innerHTML='<h2>Learn the 10 topics</h2><p>Open a topic, read the rule, then see a worked example one step at a time. Do the quick check. When you understand the topic, tick its box. <b>Tick all 10 to unlock the test.</b></p><div class="row"><span class="pill" id="tickcount"></span><button class="btn hide" id="gotest">Go to the test →</button></div><div class="bar"><i id="tickbar"></i></div><small class="tip">The exam is 90 minutes, on paper, and calculators are allowed.</small>';
+    root.appendChild(intro);
+    $('#gotest').onclick=()=>{ SFX.click(); go('test'); };
+    function paintTicks(){ const n=LESSONS.filter((_,i)=>ticks[i]).length; $('#tickcount').textContent=n+' of '+LESSONS.length+' topics ticked'; $('#tickbar').style.width=(100*n/LESSONS.length)+'%';
+      $('#gotest').classList.toggle('hide',!allTicked()); $('#testtab').textContent=allTicked()?'4. Test':'4. Test (locked)';
+      topicEls.forEach((d,i)=>{ d.classList.toggle('done',!!ticks[i]); $('.mark',d).textContent=ticks[i]?'✓':''; }); paintTest(); }
+    LESSONS.forEach((L,i)=>{ const d=document.createElement('details'); d.className='card topic'; topicEls.push(d);
+      d.innerHTML='<summary><span class="num">'+(i+1)+'</span><span>'+L.t+'</span><span class="mark" aria-hidden="true"></span></summary>'+L.html+'<h3>Worked example</h3><div class="q">'+L.ex.q+'</div>';
+      const ol=document.createElement('ol'); ol.className='steps'; const b=document.createElement('button'); b.className='btn'; b.textContent='Show step 1'; let n=0;
+      b.onclick=()=>{ SFX.step(); const li=document.createElement('li'); li.innerHTML=L.ex.steps[n++]; ol.appendChild(li); if(n>=L.ex.steps.length){ b.textContent='Done'; b.disabled=true; } else b.textContent='Show step '+(n+1); };
+      d.appendChild(ol); d.appendChild(b);
+      const h=document.createElement('h3'); h.textContent='Quick check'; d.appendChild(h);
+      L.checks.forEach(c=>{ const box=document.createElement('div'); renderQuestion(box,{q:c.q,parts:[{type:'mc',options:c.options,a:c.a}],steps:[c.why]}); d.appendChild(box); });
+      const lab=document.createElement('label'); lab.className='tickbox'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!ticks[i];
+      cb.onchange=()=>{ const before=allTicked(); ticks[i]=cb.checked; store.set('alg2_ticks',ticks); paintTicks(); if(cb.checked && allTicked() && !before) SFX.unlock(); else if(cb.checked) SFX.tick(); else SFX.untick(); };
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(' I understand this topic'));
+      d.appendChild(lab); root.appendChild(d); });
+    window.__paintTicks=paintTicks;
+  })();
+
+  // ----- REVIEW SHEET -----
+  (function(){ const root=$('#practice'); let res=store.get('alg2_review',{}); let cur=0;
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML='<div class="row"><h2>Review sheet: 27 questions</h2><span class="pill" id="score"></span></div><div class="bar"><i id="pbar"></i></div><div class="dots" id="dots"></div>';
+    const qbox=document.createElement('div'); qbox.className='card'; const head=document.createElement('div'); head.className='row'; const body=document.createElement('div');
+    const prev=document.createElement('button'); prev.className='btn ghost'; prev.textContent='← Back'; const next=document.createElement('button'); next.className='btn'; next.textContent='Next →';
+    const reset=document.createElement('button'); reset.className='btn ghost'; reset.textContent='Start again';
+    qbox.appendChild(head); qbox.appendChild(body); const foot=document.createElement('div'); foot.appendChild(prev); foot.appendChild(next); foot.appendChild(reset); qbox.appendChild(foot);
+    root.appendChild(card); root.appendChild(qbox);
+    function paint(){ const done=Object.keys(res).length, good=Object.values(res).filter(Boolean).length;
+      $('#score').textContent=good+' correct out of '+done+' answered'; $('#pbar').style.width=(100*done/REVIEW.length)+'%';
+      const dots=$('#dots'); dots.innerHTML=''; REVIEW.forEach((_,i)=>{ const b=document.createElement('button'); b.className='dot'+(i===cur?' cur':'')+(res[i]===true?' ok':res[i]===false?' no':''); b.textContent=i+1; b.setAttribute('aria-label','Question '+(i+1)); b.onclick=()=>{ SFX.click(); cur=i;load();}; dots.appendChild(b); }); }
+    function load(){ head.innerHTML='<h2>Question '+(cur+1)+'</h2><span class="pill">'+(cur<12?'Section A: recall':cur<24?'Section B: skills':cur<26?'Section C: reasoning':'Section D: extended')+'</span>';
+      renderQuestion(body,REVIEW[cur],ok=>{ res[cur]=ok; store.set('alg2_review',res); paint(); }); prev.disabled=cur===0; next.disabled=cur===REVIEW.length-1; paint(); }
+    prev.onclick=()=>{ SFX.click(); if(cur>0){cur--;load();} }; next.onclick=()=>{ SFX.click(); if(cur<REVIEW.length-1){cur++;load();} };
+    reset.onclick=()=>{ SFX.click(); res={}; store.set('alg2_review',res); cur=0; load(); };
+    load();
+  })();
+
+  // ----- EXTRA PRACTICE -----
+  (function(){ const root=$('#extra'); const names=Object.keys(GEN); let skill=names[0], right=0, total=0;
+    const card=document.createElement('div'); card.className='card'; card.innerHTML='<div class="row"><h2>Extra practice</h2><span class="pill" id="xscore">0 correct out of 0</span></div><p>Pick a skill. You get a brand-new question every time, with the steps.</p>';
+    const opts=document.createElement('div'); opts.className='opts'; const btns=[];
+    names.forEach(n=>{ const b=document.createElement('button'); b.className='opt'+(n===skill?' sel':''); b.textContent=n; b.onclick=()=>{ SFX.click(); skill=n; btns.forEach(x=>x.classList.toggle('sel',x===b)); fresh(); }; opts.appendChild(b); btns.push(b); });
+    card.appendChild(opts); root.appendChild(card);
+    const qbox=document.createElement('div'); qbox.className='card'; const body=document.createElement('div'); const again=document.createElement('button'); again.className='btn'; again.textContent='New question';
+    qbox.appendChild(body); qbox.appendChild(again); root.appendChild(qbox);
+    function fresh(){ renderQuestion(body,makeQ(skill),ok=>{ total++; if(ok) right++; $('#xscore').textContent=right+' correct out of '+total; }); }
+    again.onclick=()=>{ SFX.click(); fresh(); }; fresh();
+  })();
+
+  // ----- THE TEST: unlocks when all 10 topics are ticked -----
+  (function(){ const root=$('#test'); let qs=null, cur=0, log=[];
+    function locked(){ const n=LESSONS.filter((_,i)=>ticks[i]).length;
+      root.innerHTML='<div class="card"><h2>The test is locked</h2><p>Tick <b>all 10 topics</b> in the Learn tab to unlock it. You have ticked <b>'+n+' of 10</b>.</p><p>Still to tick:</p><ul>'+LESSONS.map((L,i)=>ticks[i]?'':'<li>'+(i+1)+'. '+L.t+'</li>').join('')+'</ul><button class="btn" id="tolearn">Go to Learn</button></div>';
+      $('#tolearn').onclick=()=>{ SFX.click(); go('learn'); }; }
+    function intro(){ const last=store.get('alg2_lasttest',null);
+      root.innerHTML='<div class="card"><h2>Test yourself</h2><p>20 new questions, 2 from each topic, made fresh every time. There are no hints during the test. At the end you get your score, the topics to work on, and the full working for every question you got wrong.</p>'+(last!==null?'<p class="pill" style="display:inline-block">Your last score: '+last+'%</p><br>':'')+'<button class="btn" id="start">Start the test</button></div>';
+      $('#start').onclick=()=>{ SFX.click(); qs=buildTest(); cur=0; log=[]; ask(); }; }
+    function ask(){ root.innerHTML='<div class="card"><div class="row"><h2>Question '+(cur+1)+' of '+qs.length+'</h2><span class="pill">'+log.filter(x=>x.ok).length+' correct so far</span></div><div class="bar"><i style="width:'+(100*cur/qs.length)+'%"></i></div><div id="tq"></div><button class="btn hide" id="tnext"></button></div>';
+      const nx=$('#tnext'); nx.textContent=cur===qs.length-1?'See my results':'Next question →';
+      renderQuestion($('#tq'),qs[cur],(ok,given)=>{ log.push({ok,given,Q:qs[cur]}); nx.classList.remove('hide'); nx.focus(); },{test:true});
+      nx.onclick=()=>{ SFX.click(); cur++; if(cur<qs.length) ask(); else results(); }; window.scrollTo(0,0); }
+    function results(){ const right=log.filter(x=>x.ok).length, pct=Math.round(100*right/log.length), v=verdict(pct); store.set('alg2_lasttest',pct);
+      ({perfect:SFX.perfect,ready:SFX.good,close:SFX.good,revise:SFX.okay,zero:SFX.low})[v.k]();
+      const miss={}; log.forEach(x=>{ if(!x.ok) miss[x.Q.topic]=(miss[x.Q.topic]||0)+1; }); const topics=Object.keys(miss).map(Number).sort((a,b)=>a-b);
+      let h='<div class="card result '+v.k+'"><div class="big">'+pct+'%</div><p class="pill" style="display:inline-block">'+right+' correct out of '+log.length+'</p><h2>'+v.t+'</h2><p>'+v.d+'</p>';
+      if(v.k!=='perfect' && v.k!=='zero') h+='<ul class="tlist">'+topics.map(t=>'<li><button class="opt" data-topic="'+t+'">'+(t+1)+'. '+LESSONS[t].t+' <span class="pill">'+miss[t]+' of 2 wrong</span></button></li>').join('')+'</ul><small class="tip">Press a topic to open it in Learn.</small>';
+      h+='<div><button class="btn" id="again">Take a new test</button><button class="btn ghost" id="back">Go to Learn</button></div></div>';
+      const wrong=log.filter(x=>!x.ok);
+      if(wrong.length){ h+='<div class="card"><h2>Working for the questions you got wrong</h2>'+wrong.map(x=>'<div class="wrongq"><span class="pill">'+LESSONS[x.Q.topic].t+'</span><div class="q">'+x.Q.q+'</div><p class="msg bad">Your answer: '+x.given+'</p><p class="msg good">Correct answer: '+answerText(x.Q)+'</p><ol class="steps">'+x.Q.steps.map(s=>'<li>'+s+'</li>').join('')+'</ol></div>').join('')+'</div>'; }
+      root.innerHTML=h;
+      $('#again').onclick=()=>{ SFX.click(); qs=buildTest(); cur=0; log=[]; ask(); }; $('#back').onclick=()=>{ SFX.click(); go('learn'); };
+      root.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{ SFX.click(); go('learn'); const d=topicEls[+b.dataset.topic]; d.open=true; d.scrollIntoView(); });
+      qs=null; window.scrollTo(0,0); }
+    paintTest=()=>{ if(qs) return; if(root.querySelector('.result')) return; if(allTicked()) intro(); else locked(); };
+    window.__test={results:(r)=>{ log=r; results(); }, build:buildTest};
+  })();
+  window.__paintTicks();
+
+  // ----- FORMULAS AND WORDS -----
+  (function(){ const root=$('#sheet');
+    root.innerHTML='<div class="card"><h2>Formulas to know</h2>'+
+    '<div class="rule"><b>Square Root Property:</b> if '+m('x^2 = n')+' then '+m('x = ±√n')+'</div>'+
+    '<div class="rule"><b>Imaginary unit:</b> '+m('i^2 = −1')+', so '+m('√(−n) = i√n')+'</div>'+
+    '<div class="rule"><b>Completing the square:</b> '+m('c = (b/2)^2')+' and '+m('x^2 + bx + (b/2)^2 = (x + b/2)^2')+'</div>'+
+    '<div class="rule"><b>Quadratic Formula:</b> '+m('x = (−b ± √(b^2 − 4ac)) / (2a)')+'</div>'+
+    '<div class="rule"><b>Discriminant</b> '+m('b^2 − 4ac')+': positive = 2 real solutions, zero = 1 real solution, negative = 2 complex solutions</div>'+
+    '<div class="rule"><b>Vertex:</b> '+m('x = −b / (2a)')+', then put that x back into the function</div>'+
+    '<div class="rule"><b>Exponents:</b> multiply = add exponents ('+m('x^2 · x^3 = x^5')+'); divide = subtract exponents ('+m('x^9 ÷ x^3 = x^6')+')</div>'+
+    '<div class="rule"><b>End behavior of '+m('ax^n')+':</b> even n = both ends the same; odd n = ends opposite; the sign of a decides the right-hand end (positive = up)</div></div>'+
+    '<div class="card"><h2>Words for the exam</h2><dl>'+[
+     ['Polynomial','A monomial or a sum of monomials, with whole-number exponents.'],['Monomial','One term: a number, a variable, or numbers and variables multiplied.'],['Binomial','A polynomial with exactly two unlike terms.'],['Trinomial','A polynomial with exactly three unlike terms.'],
+     ['Degree','The greatest exponent in the polynomial.'],['Leading coefficient','The number in front of the term with the highest degree.'],['Power function','A function of the form f(x) = axⁿ.'],['End behavior','What f(x) does as x goes to positive or negative infinity.'],
+     ['Zero of a function','An x-value where f(x) = 0; an x-intercept.'],['Coefficient of determination (R²)','Shows how well a model fits data. 1 is a perfect fit.'],['Quotient','The result of a division.'],['Standard form (quadratic)','ax² + bx + c = 0, where a is not 0.'],
+     ['Vertex','The maximum or minimum point of a parabola.'],['Square Root Property','If x² = n, then x = ±√n.'],['Completing the square','Turning a quadratic expression into a perfect square trinomial.'],['Perfect square trinomial','A trinomial that is the square of a binomial, like x² + 12x + 36 = (x + 6)².'],
+     ['Quadratic Formula','x = (−b ± √(b² − 4ac)) / 2a.'],['Discriminant','b² − 4ac. It tells you the number and type of solutions.'],['Imaginary unit','The number i, where i² = −1.'],['Rationalizing the denominator','Removing a root from the bottom of a fraction.'],['Quadratic relations','Parabolas that open sideways. They are not functions.']
+    ].map(w=>'<dt>'+w[0]+'</dt><dd>'+w[1]+'</dd>').join('')+'</dl></div>';
+  })();
+}
+if (typeof module !== 'undefined') module.exports={LESSONS,REVIEW,GEN,TOPIC_GENS,makeQ,buildTest,verdict,sameNum,m,poly,ev};
+</script>
+</body>
+</html>
