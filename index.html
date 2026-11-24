@@ -36,6 +36,11 @@ nav button.on{background:var(--accent);color:var(--accent-ink);border-color:var(
 .topic h4{margin:18px 0 4px;font-size:17px;color:var(--accent)}
 .plain{border-left:4px solid var(--accent);background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0}
 .warn{border-left:4px solid var(--bad);background:var(--bad-bg);border-radius:8px;padding:10px 14px;margin:10px 0}
+.graphs{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}
+figure.g{margin:0;flex:1 1 170px;max-width:260px;background:var(--soft);border-radius:10px;padding:8px 8px 10px;text-align:center}
+figure.g.wide{flex-basis:100%;max-width:470px}
+figure.g svg{width:100%;height:auto;display:block}
+figure.g figcaption{font-size:14.5px;line-height:1.4;margin-top:4px}
 .words{margin:6px 0;padding-left:22px} .words li{margin:6px 0}
 .math{font-family:"Cambria Math",Georgia,"Times New Roman",serif;font-size:1.08em;white-space:nowrap}
 sup{font-size:.72em}
@@ -163,6 +168,25 @@ function poly(terms, v){ v=v||'x'; let out='';
     out += (out==='' ? (c<0?'−':'')+body : (c<0?' − ':' + ')+body); });
   return out||'0'; }
 
+// ---------- small graphs for the lessons (plain SVG, no library) ----------
+function graph(o){ const w=o.w||240,h=o.h||190,p=12, X0=o.x[0],X1=o.x[1],Y0=o.y[0],Y1=o.y[1];
+  const sx=x=>p+(x-X0)/(X1-X0)*(w-2*p), sy=y=>h-p-(y-Y0)/(Y1-Y0)*(h-2*p), r=n=>Math.round(n*10)/10;
+  let g='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+(o.alt||'graph')+'" style="font:12px sans-serif">';
+  const ax=sy(Math.min(Math.max(0,Y0),Y1)), ay=sx(Math.min(Math.max(0,X0),X1));
+  g+='<line x1="'+p+'" y1="'+r(ax)+'" x2="'+(w-p)+'" y2="'+r(ax)+'" style="stroke:var(--muted)" stroke-width="1.5"/><line x1="'+r(ay)+'" y1="'+p+'" x2="'+r(ay)+'" y2="'+(h-p)+'" style="stroke:var(--muted)" stroke-width="1.5"/>';
+  (o.xt||[]).forEach(t=>{ g+='<line x1="'+r(sx(t))+'" y1="'+r(ax-3)+'" x2="'+r(sx(t))+'" y2="'+r(ax+3)+'" style="stroke:var(--muted)"/><text x="'+r(sx(t))+'" y="'+r(ax+15)+'" text-anchor="middle" style="fill:var(--muted)">'+neg(t)+'</text>'; });
+  (o.yt||[]).forEach(t=>{ g+='<line x1="'+r(ay-3)+'" y1="'+r(sy(t))+'" x2="'+r(ay+3)+'" y2="'+r(sy(t))+'" style="stroke:var(--muted)"/><text x="'+r(ay-6)+'" y="'+r(sy(t)+4)+'" text-anchor="end" style="fill:var(--muted)">'+neg(t)+'</text>'; });
+  if(o.xl) g+='<text x="'+(w-p)+'" y="'+r(ax-6)+'" text-anchor="end" style="fill:var(--muted)">'+o.xl+'</text>';
+  if(o.yl) g+='<text x="'+r(ay+6)+'" y="'+(p+8)+'" style="fill:var(--muted)">'+o.yl+'</text>';
+  let d='', pen=false; const N=160;
+  for(let i=0;i<=N;i++){ const x=X0+(X1-X0)*i/N, y=o.f(x); if(y<Y0||y>Y1){ pen=false; continue; } d+=(pen?'L':'M')+r(sx(x))+' '+r(sy(y))+' '; pen=true; }
+  g+='<path d="'+d+'" fill="none" style="stroke:var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+  (o.pts||[]).forEach(q=>{ const c=q.c||'var(--ink)'; g+='<circle cx="'+r(sx(q.x))+'" cy="'+r(sy(q.y))+'" r="5" style="fill:'+c+';stroke:var(--card)" stroke-width="1.5"/>';
+    if(q.t) g+='<text x="'+r(sx(q.x)+(q.dx||0))+'" y="'+r(sy(q.y)+(q.dy==null?-10:q.dy))+'" text-anchor="'+(q.a||'middle')+'" style="fill:'+c+';font-weight:700">'+q.t+'</text>'; });
+  (o.notes||[]).forEach(q=>{ g+='<text x="'+r(sx(q.x))+'" y="'+r(sy(q.y))+'" text-anchor="'+(q.a||'middle')+'" style="fill:var(--ink);font-weight:700">'+q.t+'</text>'; });
+  return g+'</svg>'; }
+function fig(svg,cap,cls){ return '<figure class="g'+(cls?' '+cls:'')+'">'+svg+'<figcaption>'+cap+'</figcaption></figure>'; }
+
 // ---------- LEARN: lessons ----------
 const WORDS=['binomial','discriminant','end behavior','imaginary unit','leading coefficient','monomial','quadratic formula','square root property','trinomial','vertex','zero'];
 const LESSONS=[
@@ -214,11 +238,14 @@ const LESSONS=[
   <table><tr><th></th><th>a is positive</th><th>a is negative</th></tr>
   <tr><th>n is even</th><td>both ends go UP<br>range: ${m('f(x) ≥ 0')}</td><td>both ends go DOWN<br>range: ${m('f(x) ≤ 0')}</td></tr>
   <tr><th>n is odd</th><td>left DOWN, right UP<br>range: all real numbers</td><td>left UP, right DOWN<br>range: all real numbers</td></tr></table>
+  <p>Here are the four cases as pictures. Look at where each end of the blue line is heading.</p>
+  <div class="graphs">${fig(graph({f:x=>x*x,x:[-2.3,2.3],y:[-4.6,4.6],alt:'x squared: both ends go up',notes:[{x:-1.5,y:-1.2,t:'up ↑'},{x:1.5,y:-1.2,t:'↑ up'}]}),m('x^2')+'<br>even, a positive: both ends UP')}${fig(graph({f:x=>-x*x,x:[-2.3,2.3],y:[-4.6,4.6],alt:'minus x squared: both ends go down',notes:[{x:-1.5,y:1.2,t:'down ↓'},{x:1.5,y:1.2,t:'↓ down'}]}),m('−x^2')+'<br>even, a negative: both ends DOWN')}${fig(graph({f:x=>x*x*x,x:[-2.3,2.3],y:[-4.6,4.6],alt:'x cubed: left down, right up',notes:[{x:-0.9,y:-3.6,t:'down ↓'},{x:0.9,y:3.2,t:'↑ up'}]}),m('x^3')+'<br>odd, a positive: left DOWN, right UP')}${fig(graph({f:x=>-x*x*x,x:[-2.3,2.3],y:[-4.6,4.6],alt:'minus x cubed: left up, right down',notes:[{x:-0.9,y:3.2,t:'up ↑'},{x:0.9,y:-3.6,t:'↓ down'}]}),m('−x^3')+'<br>odd, a negative: left UP, right DOWN')}</div>
   <div class="rule"><b>How to write it:</b> up is ${m('f(x) → ∞')}. Down is ${m('f(x) → −∞')}.<br>Left side is "as ${m('x → −∞')}". Right side is "as ${m('x → ∞')}".</div>
   <h4>Range</h4>
   <p>The <b>range</b> is every height the graph can reach. ${m('x^2')} can never be negative (try any number), so its range is ${m('f(x) ≥ 0')}. Put a minus in front and it can never be positive. Odd powers go from very low to very high, so they reach every number.</p>
   <h4>Zero</h4>
-  <p>A <b>zero</b> is an x-value that makes the function equal 0. On the graph it is where the line touches the x-axis. To find it, write "function = 0" and solve for x.</p>`,
+  <p>A <b>zero</b> is an x-value that makes the function equal 0. On the graph it is where the line touches the x-axis. To find it, write "function = 0" and solve for x.</p>
+  <div class="graphs">${fig(graph({w:360,h:220,f:x=>x*x*x-27,x:[-1.5,4.3],y:[-45,45],xt:[1,2,3,4],xl:'x',alt:'graph of x cubed minus 27 crossing the x-axis at 3',pts:[{x:3,y:0,c:'var(--good)',t:'zero at x = 3',dx:-10,dy:-12,a:'end'}]}),'The graph of '+m('f(x) = x^3 − 27')+' crosses the x-axis at 3. So the zero is '+m('x = 3')+'.','wide')}</div>`,
  ex:{q:`Describe the end behavior of ${m('f(x) = −2x^4')}.`,
   steps:[`The exponent is 4. That is <b>even</b>, so both ends go the same way.`,`The number in front is −2. That is <b>negative</b>, so both ends go <b>down</b>.`,`Write it: as ${m('x → −∞')}, ${m('f(x) → −∞')}, and as ${m('x → ∞')}, ${m('f(x) → −∞')}.`]},
  checks:[{q:`Which function has a range of only values less than or equal to zero?`,options:[m('x^6'),m('−x^6'),m('x^3'),m('−x^3')],a:1,why:`${m('x^6')} is never negative, so ${m('−x^6')} is never positive. Odd powers reach every number.`},
@@ -235,7 +262,8 @@ const LESSONS=[
   <div class="rule">So look along the ${m('f(x)')} row for a <b>sign change</b>: + then −, or − then +. A zero is somewhere <b>between</b> those two x-values.</div>
   <p>The table does not tell you the exact zero. It only tells you which two x-values it sits between. That is all the question wants.</p>
   <div class="warn"><b>Common mistake:</b> looking for the smallest number. −10 is the lowest value in the table below, but there is no sign change next to it, so no zero is there.</div>
-  <table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>f(x)</th><td>6</td><td>−9</td><td>−10</td><td>−9</td><td>6</td></tr></table>`,
+  <table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>f(x)</th><td>6</td><td>−9</td><td>−10</td><td>−9</td><td>6</td></tr></table>
+  <div class="graphs">${fig(graph({w:380,h:250,f:x=>x*x*x*x-10,x:[-2.5,2.5],y:[-12.5,9],xt:[-2,-1,1,2],xl:'x',alt:'graph of x to the fourth minus 10 with the table points and two zeros marked',pts:[{x:-2,y:6,t:'(−2, 6)',dx:10,dy:4,a:'start'},{x:-1,y:-9,t:'(−1, −9)',dx:-8,dy:4,a:'end'},{x:0,y:-10,t:'(0, −10)',dx:8,dy:18,a:'start'},{x:1,y:-9,t:'(1, −9)',dx:8,dy:4,a:'start'},{x:2,y:6,t:'(2, 6)',dx:-10,dy:4,a:'end'},{x:-1.778,y:0,c:'var(--good)',t:'zero',dx:-8,dy:-10,a:'end'},{x:1.778,y:0,c:'var(--good)',t:'zero',dx:8,dy:-10,a:'start'}]}),'The same table as a graph. The white dots are the points from the table. The green dots are the zeros: one between −2 and −1, one between 1 and 2. That is exactly where the dots jump from above the axis to below it.','wide')}</div>`,
  ex:{q:`The table above is for ${m('f(x) = x^4 − 10')}. Where are the zeros?`,
   steps:[`Read the signs left to right: +, −, −, −, +.`,`First change: + at ${m('x = −2')} to − at ${m('x = −1')}. So there is a zero <b>between −2 and −1</b>.`,`From −1 to 0 to 1 the sign stays negative. No zero there.`,`Second change: − at ${m('x = 1')} to + at ${m('x = 2')}. So there is a zero <b>between 1 and 2</b>.`]},
  checks:[{q:`A table shows ${m('f(3) = −4')} and ${m('f(4) = 5')}. What does that tell you?`,options:['There is a zero between 3 and 4','There is no zero','The zero is exactly 3','The zero is exactly 4'],a:0,why:'The sign changes from negative to positive, so the graph crosses zero between 3 and 4.'}]},
@@ -337,6 +365,8 @@ const LESSONS=[
   <tr><td>positive</td><td>2 real solutions</td><td>the root is a normal number, and ± gives two answers</td></tr>
   <tr><td>zero</td><td>1 real solution</td><td>the root of 0 is 0, so + and − give the same answer</td></tr>
   <tr><td>negative</td><td>2 complex (imaginary) solutions</td><td>the root of a negative needs ${m('i')}</td></tr></table>
+  <p>On a graph, the real solutions are the places where the parabola touches the x-axis:</p>
+  <div class="graphs">${fig(graph({f:x=>x*x-4*x+3,x:[-0.8,4.8],y:[-2.5,7],alt:'parabola crossing the x-axis twice',pts:[{x:1,y:0,c:'var(--good)'},{x:3,y:0,c:'var(--good)'}]}),'Discriminant <b>positive</b><br>crosses twice: 2 real solutions')}${fig(graph({f:x=>x*x-4*x+4,x:[-0.8,4.8],y:[-2.5,7],alt:'parabola touching the x-axis once',pts:[{x:2,y:0,c:'var(--good)'}]}),'Discriminant <b>zero</b><br>touches once: 1 real solution')}${fig(graph({f:x=>x*x-4*x+6,x:[-0.8,4.8],y:[-2.5,7],alt:'parabola that never touches the x-axis'}),'Discriminant <b>negative</b><br>never touches: no real solutions, so 2 complex ones')}</div>
   <div class="warn"><b>Common mistakes:</b><br>
   1. ${m('b^2')} is never negative. ${m('(−4)^2 = 16')}, not −16.<br>
   2. If b is negative, ${m('−b')} becomes positive. ${m('−(−4) = 4')}.<br>
@@ -355,11 +385,13 @@ const LESSONS=[
   <h4>Which way does it open?</h4>
   <div class="plain">If ${m('a')} is <b>positive</b>, the parabola opens up like a smile. The vertex is at the bottom, so it is a <b>minimum</b>.<br>
   If ${m('a')} is <b>negative</b>, it opens down like a frown. The vertex is at the top, so it is a <b>maximum</b>. A thrown ball always has a negative ${m('a')}: it goes up, then comes down.</div>
+  <div class="graphs">${fig(graph({f:x=>x*x-2,x:[-2.3,2.3],y:[-3.5,4],alt:'parabola opening up with the vertex at the bottom',pts:[{x:0,y:-2,c:'var(--good)',t:'vertex (minimum)',dx:9,dy:17,a:'start'}]}),m('a')+' positive: opens up')}${fig(graph({f:x=>-x*x+2,x:[-2.3,2.3],y:[-4,3.5],alt:'parabola opening down with the vertex at the top',pts:[{x:0,y:2,c:'var(--good)',t:'vertex (maximum)',dx:9,dy:-8,a:'start'}]}),m('a')+' negative: opens down')}</div>
   <h4>Finding the vertex</h4>
   <div class="rule"><b>Step 1:</b> the x-value of the vertex is ${m('−b / (2a)')}.<br><b>Step 2:</b> put that x-value back into the function. The answer is the height of the vertex.</div>
   <p>Why ${m('−b / (2a)')}? A parabola is the same on both sides, like a mirror. The vertex sits exactly in the middle, and the middle works out to ${m('−b / (2a)')}. It is the Quadratic Formula without the ± part.</p>
   <h4>What "interpret" means</h4>
   <p>Say what the two numbers mean in the story. In a ball problem, x is the <b>time</b> and the function gives the <b>height</b>. So a vertex of (1.5, 41) means: "the ball reaches its highest point, 41 feet, after 1.5 seconds".</p>
+  <div class="graphs">${fig(graph({w:400,h:260,f:t=>-16*t*t+48*t+5,x:[-0.35,4.3],y:[-6,48],xt:[1,2,3],yt:[10,20,30,40],xl:'time (seconds)',yl:'height (feet)',alt:'path of the ball height over time with the vertex at 1.5 seconds and 41 feet',pts:[{x:1.5,y:41,c:'var(--good)',t:'vertex (1.5, 41)'},{x:0,y:5,t:'starts at 5 ft',dx:10,dy:16,a:'start'}]}),'The ball from the worked example below: '+m('h(t) = −16t^2 + 48t + 5')+'. It starts 5 feet up, climbs to 41 feet at 1.5 seconds, then falls.','wide')}</div>
   <h4>Does a model fit the data?</h4>
   <p>${m('R^2')} (the coefficient of determination) is a score from 0 to 1 for how well a model matches the data. ${m('R^2 = 1')} means a <b>perfect</b> match.</p>
   <div class="rule">To check: put each x from the table into the function. If <b>every</b> answer is exactly the same as the table, then ${m('R^2 = 1')}. If even one is different, the fit is not perfect.</div>`,
