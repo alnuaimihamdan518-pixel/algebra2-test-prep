@@ -82,6 +82,11 @@ small.tip{color:var(--muted);display:block;margin-top:6px}
 #wb{position:fixed;left:0;right:0;bottom:0;height:44vh;background:var(--card);border-top:3px solid var(--accent);z-index:20;display:flex;flex-direction:column;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
 #wb.tall{height:78vh}
 #wb.hide,#calc.hide{display:none}
+#dock{position:fixed;left:8px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:8px}
+#dock button{width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);background:var(--card);color:var(--ink);font-size:22px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);padding:0}
+#dock button.on{background:var(--accent);color:var(--accent-ink)}
+#dock button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media print{#dock{display:none}}
 .wbbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--line)}
 .swatches{display:inline-flex;gap:6px} .swatch{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);cursor:pointer;padding:0} .swatch.on{border-color:var(--accent)}
 #wbcanvas{flex:1;width:100%;touch-action:none;cursor:crosshair;display:block;background:var(--card)}
@@ -113,6 +118,7 @@ body.wbopen .wrap{padding-bottom:48vh} body.wbopen.wbtall .wrap{padding-bottom:8
   <section id="sheet" class="hide"></section>
 </div>
 
+<div id="dock"><button id="wbside" title="Whiteboard" aria-label="Open or close the whiteboard">✏️</button><button id="calcside" title="Calculator" aria-label="Open or close the calculator">🧮</button></div>
 <div id="wb" class="hide" role="region" aria-label="Whiteboard">
   <div class="wbbar">
     <b>Whiteboard</b>
@@ -508,7 +514,8 @@ if (typeof document !== 'undefined') {
     $('#wbsize').onclick=()=>{ SFX.click(); size=(size+1)%SIZES.length; $('#wbsize').textContent='Size: '+SIZES[size][0]; };
     $('#wbclear').onclick=()=>{ SFX.untick(); ctx.globalCompositeOperation='source-over'; ctx.clearRect(0,0,cv.width,cv.height); };
     $('#wbtall').onclick=()=>{ SFX.click(); const t=wb.classList.toggle('tall'); document.body.classList.toggle('wbtall',t); $('#wbtall').textContent=t?'Smaller':'Bigger'; fit(); };
-    function toggle(open){ wb.classList.toggle('hide',!open); document.body.classList.toggle('wbopen',open); $('#wbbtn').classList.toggle('on',open); if(open) fit(); }
+    function toggle(open){ wb.classList.toggle('hide',!open); document.body.classList.toggle('wbopen',open); $('#wbbtn').classList.toggle('on',open); $('#wbside').classList.toggle('on',open); if(open) fit(); }
+    $('#wbside').onclick=()=>$('#wbbtn').click();
     $('#wbbtn').onclick=()=>{ SFX.click(); toggle(wb.classList.contains('hide')); }; $('#wbclose').onclick=()=>{ SFX.click(); toggle(false); };
     window.addEventListener('resize',()=>{ if(!wb.classList.contains('hide')) fit(); });
   })();
@@ -530,7 +537,8 @@ if (typeof document !== 'undefined') {
         insert(k); };
       $('#calckeys').appendChild(b); });
     inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); equals(); } });
-    function toggle(open){ box.classList.toggle('hide',!open); $('#calcbtn').classList.toggle('on',open); }
+    function toggle(open){ box.classList.toggle('hide',!open); $('#calcbtn').classList.toggle('on',open); $('#calcside').classList.toggle('on',open); }
+    $('#calcside').onclick=()=>$('#calcbtn').click();
     $('#calcbtn').onclick=()=>{ SFX.click(); toggle(box.classList.contains('hide')); }; $('#calcclose').onclick=()=>{ SFX.click(); toggle(false); };
   })();
 
