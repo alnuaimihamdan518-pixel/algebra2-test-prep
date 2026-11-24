@@ -33,6 +33,10 @@ nav button.on{background:var(--accent);color:var(--accent-ink);border-color:var(
 .num{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:700}
 .rule{background:var(--soft);border-radius:10px;padding:10px 14px;margin:10px 0}
 .rule b{color:var(--accent)}
+.topic h4{margin:18px 0 4px;font-size:17px;color:var(--accent)}
+.plain{border-left:4px solid var(--accent);background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0}
+.warn{border-left:4px solid var(--bad);background:var(--bad-bg);border-radius:8px;padding:10px 14px;margin:10px 0}
+.words{margin:6px 0;padding-left:22px} .words li{margin:6px 0}
 .math{font-family:"Cambria Math",Georgia,"Times New Roman",serif;font-size:1.08em;white-space:nowrap}
 sup{font-size:.72em}
 .steps{margin:10px 0 0;padding:0;list-style:none;counter-reset:s}
@@ -87,6 +91,8 @@ small.tip{color:var(--muted);display:block;margin-top:6px}
 #dock button.on{background:var(--accent);color:var(--accent-ink)}
 #dock button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media print{#dock{display:none}}
+@media (max-width:1010px){#dock{top:auto;transform:none;left:auto;right:10px;bottom:12px}
+ body.wbopen #dock{bottom:calc(44vh + 12px)} body.wbopen.wbtall #dock{bottom:calc(78vh + 12px)}}
 .wbbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--line)}
 .swatches{display:inline-flex;gap:6px} .swatch{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);cursor:pointer;padding:0} .swatch.on{border-color:var(--accent)}
 #wbcanvas{flex:1;width:100%;touch-action:none;cursor:crosshair;display:block;background:var(--card)}
@@ -161,78 +167,202 @@ function poly(terms, v){ v=v||'x'; let out='';
 const WORDS=['binomial','discriminant','end behavior','imaginary unit','leading coefficient','monomial','quadratic formula','square root property','trinomial','vertex','zero'];
 const LESSONS=[
 {t:'What is a polynomial?', html:`
-  <p>A <b>polynomial</b> is a sum of terms like ${m('5x^3')} or ${m('−2x')} or ${m('7')}. The exponents must be <b>whole numbers</b> (0, 1, 2, 3 …).</p>
-  <div class="rule"><b>Names by number of terms:</b> 1 term = monomial, 2 terms = binomial, 3 terms = trinomial.<br>
-  <b>Degree:</b> the biggest exponent.<br><b>Leading coefficient:</b> the number in front of the term with the biggest exponent.</div>
-  <div class="rule"><b>NOT a polynomial</b> if it has: a negative exponent (${m('3x^-2')}), a variable on the bottom of a fraction (${m('5/x')}), or a variable under a root (${m('√x')}).<br>Fractions as <i>numbers</i> are fine: ${m('⅔a^2 − 4a + 1')} is a polynomial.</div>`,
+  <h4>Words you need first</h4>
+  <ul class="words">
+   <li><b>Variable:</b> a letter, like ${m('x')}, that stands for a number we do not know yet.</li>
+   <li><b>Coefficient:</b> the number stuck to the front of a letter. It means "times". So ${m('5x')} means 5 times x. If you see no number, like plain ${m('x')}, the coefficient is 1.</li>
+   <li><b>Exponent:</b> the small raised number. It tells you how many times to multiply the letter by itself. ${m('x^3')} means ${m('x · x · x')}.</li>
+   <li><b>Term:</b> one chunk of the expression. Terms are separated by + and − signs. The sign in front of a term belongs to it.</li>
+   <li><b>Constant:</b> a plain number with no letter, like 7.</li>
+  </ul>
+  <h4>So what is a polynomial?</h4>
+  <p>A <b>polynomial</b> is just terms added or subtracted, like ${m('5x^3 − 2x + 7')}. That one has three terms: ${m('5x^3')}, ${m('−2x')} and ${m('7')}.</p>
+  <p>There is one rule: every exponent must be a <b>whole number</b> (0, 1, 2, 3 …). No negatives, no fractions.</p>
+  <div class="plain"><b>Hidden exponents.</b> Plain ${m('x')} is really ${m('x^1')} (one x). A plain number like 7 has no x at all, and that counts as exponent 0. So ${m('5x^3 − 2x + 7')} has exponents 3, 1 and 0. All whole numbers, so it is a polynomial.</div>
+  <h4>What breaks the rule</h4>
+  <div class="rule"><b>NOT a polynomial</b> if the variable has:<br>
+  1. a negative exponent, like ${m('3x^-2')}<br>
+  2. a place on the bottom of a fraction, like ${m('5/x')}<br>
+  3. a place under a root, like ${m('√x')}</div>
+  <p>A fraction that is only a <i>number</i> is fine. In ${m('⅔a^2 − 4a + 1')} the ⅔ is just the coefficient, and the exponents are 2, 1 and 0. It is a polynomial.</p>
+  <h4>Names</h4>
+  <div class="rule"><b>Monomial</b> = 1 term (mono means one). <b>Binomial</b> = 2 terms (bi means two, like bicycle). <b>Trinomial</b> = 3 terms (tri means three, like triangle).</div>
+  <h4>Degree and leading coefficient</h4>
+  <p>The <b>degree</b> is the biggest exponent in the whole polynomial. The <b>leading coefficient</b> is the number in front of the term that has that biggest exponent.</p>
+  <div class="warn"><b>Common mistake:</b> picking the first term you see. The biggest exponent is not always written first. In ${m('2x + 9x^4 − 1')} the degree is 4 and the leading coefficient is 9.</div>
+  <h4>What does f(x) mean?</h4>
+  <p>${m('f(x)')} is <b>not</b> f times x. Think of ${m('f')} as a machine: you put a number in for x, and it gives a number back. ${m('f(0)')} means "put 0 in place of every x and work it out".</p>`,
  ex:{q:`Find the degree, the leading coefficient and ${m('f(0)')} for ${m('f(x) = −3x^4 + 2x^3 − x + 9')}.`,
   steps:[`Look at every exponent: 4, 3, 1 (plain ${m('x')} means ${m('x^1')}) and 0 (the 9 has no x).`,`The biggest exponent is 4, so the <b>degree is 4</b>.`,`The term with that exponent is ${m('−3x^4')}. The number in front is <b>−3</b>. That is the leading coefficient.`,`For ${m('f(0)')}, swap every x for 0: ${m('−3(0)^4 + 2(0)^3 − 0 + 9')}. Everything with a 0 disappears, so ${m('f(0) = 9')}.`]},
  checks:[{q:`Is ${m('3x^-2 + x')} a polynomial?`,options:['Yes','No'],a:1,why:'No. It has a negative exponent (−2).'},
          {q:`What is the degree of ${m('4x^3 − 8x^6 + 2x − 1')}?`,options:['3','6','4','−8'],a:1,why:'The biggest exponent is 6. The order the terms are written in does not matter.'}]},
 {t:'Power functions: end behavior, range and zeros', html:`
-  <p>A <b>power function</b> looks like ${m('f(x) = ax^n')}. <b>End behavior</b> means: what does the graph do far to the left and far to the right?</p>
-  <p>You only need two things: is ${m('n')} even or odd, and is ${m('a')} positive or negative?</p>
+  <h4>Words you need first</h4>
+  <ul class="words">
+   <li><b>Function:</b> a rule that takes a number x and gives back a number ${m('f(x)')}.</li>
+   <li><b>Graph:</b> a picture of that rule. x tells you how far left or right you are. ${m('f(x)')} tells you how high or low the line is at that spot.</li>
+   <li><b>∞ (infinity):</b> not a real number. It just means "keeps getting bigger forever". ${m('−∞')} means "keeps getting more negative forever".</li>
+   <li><b>→</b> means "goes toward". So ${m('x → ∞')} means "as you move further and further to the right".</li>
+  </ul>
+  <p>A <b>power function</b> has one term: ${m('f(x) = ax^n')}. Here ${m('a')} is the number in front and ${m('n')} is the exponent. Example: in ${m('−2x^4')}, ${m('a = −2')} and ${m('n = 4')}.</p>
+  <h4>End behavior</h4>
+  <p><b>End behavior</b> asks: when you go very far left and very far right, does the graph go up or down?</p>
+  <div class="plain"><b>Why even and odd matter. Try it with numbers.</b><br>
+  Even exponent: ${m('(−10)^2 = 100')} and ${m('10^2 = 100')}. A negative times a negative is positive, so the left side and the right side both come out positive. <b>Both ends go the same way.</b><br>
+  Odd exponent: ${m('(−10)^3 = −1000')} and ${m('10^3 = 1000')}. The negative survives, so the left side is very low and the right side is very high. <b>The ends go opposite ways.</b></div>
+  <p>Then look at ${m('a')}. If ${m('a')} is negative, every value flips sign, so the whole graph turns upside down.</p>
   <table><tr><th></th><th>a is positive</th><th>a is negative</th></tr>
   <tr><th>n is even</th><td>both ends go UP<br>range: ${m('f(x) ≥ 0')}</td><td>both ends go DOWN<br>range: ${m('f(x) ≤ 0')}</td></tr>
   <tr><th>n is odd</th><td>left DOWN, right UP<br>range: all real numbers</td><td>left UP, right DOWN<br>range: all real numbers</td></tr></table>
-  <div class="rule"><b>Up</b> is written ${m('f(x) → ∞')}. <b>Down</b> is written ${m('f(x) → −∞')}.<br><b>Zero:</b> an x-value where ${m('f(x) = 0')}. To find it, set the function equal to 0 and solve.</div>`,
+  <div class="rule"><b>How to write it:</b> up is ${m('f(x) → ∞')}. Down is ${m('f(x) → −∞')}.<br>Left side is "as ${m('x → −∞')}". Right side is "as ${m('x → ∞')}".</div>
+  <h4>Range</h4>
+  <p>The <b>range</b> is every height the graph can reach. ${m('x^2')} can never be negative (try any number), so its range is ${m('f(x) ≥ 0')}. Put a minus in front and it can never be positive. Odd powers go from very low to very high, so they reach every number.</p>
+  <h4>Zero</h4>
+  <p>A <b>zero</b> is an x-value that makes the function equal 0. On the graph it is where the line touches the x-axis. To find it, write "function = 0" and solve for x.</p>`,
  ex:{q:`Describe the end behavior of ${m('f(x) = −2x^4')}.`,
   steps:[`The exponent is 4. That is <b>even</b>, so both ends go the same way.`,`The number in front is −2. That is <b>negative</b>, so both ends go <b>down</b>.`,`Write it: as ${m('x → −∞')}, ${m('f(x) → −∞')}, and as ${m('x → ∞')}, ${m('f(x) → −∞')}.`]},
  checks:[{q:`Which function has a range of only values less than or equal to zero?`,options:[m('x^6'),m('−x^6'),m('x^3'),m('−x^3')],a:1,why:`${m('x^6')} is never negative, so ${m('−x^6')} is never positive. Odd powers reach every number.`},
          {q:`Where is the real zero of ${m('f(x) = x^3 − 27')}?`,options:['x = 3','x = 9','x = −3','x = 27'],a:0,why:`Set it to 0: ${m('x^3 = 27')}. The cube root of 27 is 3, because 3 × 3 × 3 = 27.`}]},
 {t:'Finding zeros from a table', html:`
-  <p>A zero is where the graph crosses the x-axis. In a table you spot it where ${m('f(x)')} <b>changes sign</b>: from + to −, or from − to +.</p>
-  <div class="rule">If one value is positive and the next is negative, the graph must cross zero somewhere <b>between</b> those two x-values.</div>
+  <h4>The idea</h4>
+  <p>A table is a list of points on the graph. The top row is x (where you are). The bottom row is ${m('f(x)')} (how high the graph is there).</p>
+  <ul class="words">
+   <li>If ${m('f(x)')} is <b>positive</b>, the graph is <b>above</b> the x-axis.</li>
+   <li>If ${m('f(x)')} is <b>negative</b>, the graph is <b>below</b> the x-axis.</li>
+   <li>If ${m('f(x)')} is <b>exactly 0</b>, the graph is <b>on</b> the x-axis. That x is a zero.</li>
+  </ul>
+  <div class="plain"><b>Think of a building.</b> The x-axis is the ground floor. If you are upstairs at one moment and in the basement the next, you must have passed the ground floor in between. The graph works the same way: to get from above the axis to below it, it has to cross it.</div>
+  <div class="rule">So look along the ${m('f(x)')} row for a <b>sign change</b>: + then −, or − then +. A zero is somewhere <b>between</b> those two x-values.</div>
+  <p>The table does not tell you the exact zero. It only tells you which two x-values it sits between. That is all the question wants.</p>
+  <div class="warn"><b>Common mistake:</b> looking for the smallest number. −10 is the lowest value in the table below, but there is no sign change next to it, so no zero is there.</div>
   <table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>f(x)</th><td>6</td><td>−9</td><td>−10</td><td>−9</td><td>6</td></tr></table>`,
  ex:{q:`The table above is for ${m('f(x) = x^4 − 10')}. Where are the zeros?`,
   steps:[`Read the signs left to right: +, −, −, −, +.`,`First change: + at ${m('x = −2')} to − at ${m('x = −1')}. So there is a zero <b>between −2 and −1</b>.`,`From −1 to 0 to 1 the sign stays negative. No zero there.`,`Second change: − at ${m('x = 1')} to + at ${m('x = 2')}. So there is a zero <b>between 1 and 2</b>.`]},
  checks:[{q:`A table shows ${m('f(3) = −4')} and ${m('f(4) = 5')}. What does that tell you?`,options:['There is a zero between 3 and 4','There is no zero','The zero is exactly 3','The zero is exactly 4'],a:0,why:'The sign changes from negative to positive, so the graph crosses zero between 3 and 4.'}]},
 {t:'Adding and subtracting polynomials', html:`
-  <p>You can only add <b>like terms</b>: terms with the <b>same exponent</b>. Add the numbers in front and keep the exponent the same.</p>
-  <div class="rule"><b>Add:</b> line up like terms and add their numbers.<br><b>Subtract:</b> first flip the sign of every term in the second polynomial, then add.</div>`,
+  <h4>Like terms</h4>
+  <p><b>Like terms</b> are terms with the same letter and the <b>same exponent</b>. ${m('5x^2')} and ${m('3x^2')} are like terms. ${m('5x^2')} and ${m('3x')} are not.</p>
+  <div class="plain"><b>Think of fruit.</b> 5 apples + 3 apples = 8 apples. But 5 apples + 3 oranges cannot be squeezed into one number. In the same way ${m('5x^2 + 3x^2 = 8x^2')}, but ${m('5x^2 + 3x')} has to stay as it is.</div>
+  <p>When you add like terms, you add the <b>coefficients</b> (the numbers in front). The exponent <b>does not change</b>. 5 apples + 3 apples is 8 apples, not 8 "apples squared".</p>
+  <p>Remember: a term with no number in front has a coefficient of 1. ${m('x^2')} means ${m('1x^2')}, and ${m('−x')} means ${m('−1x')}.</p>
+  <h4>Adding</h4>
+  <div class="rule">Find the like terms in both brackets and add their numbers. Do the biggest exponent first and work down, so nothing gets missed.</div>
+  <h4>Subtracting</h4>
+  <p>A minus sign in front of a bracket hits <b>every</b> term inside it. So flip every sign in the second bracket, then add as normal.</p>
+  <div class="rule">${m('−(2x^2 − 4x + 7)')} becomes ${m('−2x^2 + 4x − 7')}. Plus turns into minus, minus turns into plus.</div>
+  <div class="warn"><b>Common mistake:</b> flipping only the first term and forgetting the rest. Every term in the second bracket must flip.</div>`,
  ex:{q:`Add ${m('(5x^3 − 3x^2 + 6x + 9) + (4x^3 + 7x^2 − 2x − 15)')}.`,
   steps:[`${m('x^3')} terms: 5 + 4 = 9, so ${m('9x^3')}.`,`${m('x^2')} terms: −3 + 7 = 4, so ${m('4x^2')}.`,`${m('x')} terms: 6 + (−2) = 4, so ${m('4x')}.`,`Plain numbers: 9 + (−15) = −6.`,`Put it together: ${m('9x^3 + 4x^2 + 4x − 6')}.`]},
  checks:[{q:`Subtract: ${m('(5x^2 + 3x − 2) − (2x^2 − 4x + 7)')}`,options:[m('3x^2 + 7x − 9'),m('3x^2 − x + 5'),m('7x^2 − x + 5'),m('3x^2 + 7x + 5')],a:0,why:`Flip the second one: ${m('−2x^2 + 4x − 7')}. Then add: 5−2 = 3, 3+4 = 7, −2−7 = −9.`}]},
 {t:'Multiplying polynomials', html:`
-  <p>Multiply the <b>numbers</b>, and <b>add the exponents</b>.</p>
-  <div class="rule">${m('4x^2 · 2x^3 = 8x^5')} because 4 × 2 = 8 and 2 + 3 = 5.<br>
-  <b>One term × many terms:</b> multiply it by each term inside the brackets.<br>
-  <b>Two terms × two terms:</b> multiply every term in the first by every term in the second (4 multiplications), then add like terms.</div>`,
+  <h4>Multiplying two terms</h4>
+  <p>Do two small jobs: multiply the <b>numbers</b>, then <b>add the exponents</b>.</p>
+  <div class="plain"><b>Why do we add the exponents?</b> Write it out. ${m('x^2')} is ${m('x · x')} and ${m('x^3')} is ${m('x · x · x')}. So ${m('x^2 · x^3 = x · x · x · x · x')}. Count them: five x's, which is ${m('x^5')}. And 2 + 3 = 5.</div>
+  <div class="rule">${m('4x^2 · 2x^3 = 8x^5')} because 4 × 2 = 8 and 2 + 3 = 5.<br>A plain ${m('x')} counts as ${m('x^1')}, so ${m('x^2 · x = x^3')}. A plain number has no x, so the exponent stays the same: ${m('4x^2 · 3 = 12x^2')}.</div>
+  <h4>One term times a bracket</h4>
+  <p>The term outside multiplies <b>each</b> term inside. ${m('3(x + 2)')} means "3 lots of ${m('x + 2')}", which is ${m('3x + 6')}.</p>
+  <h4>Bracket times bracket</h4>
+  <p>Every term in the first bracket must multiply every term in the second. Two terms times two terms gives 4 multiplications. After that, add any like terms.</p>
+  <div class="rule"><b>Signs:</b> plus × plus = plus. minus × minus = plus. plus × minus = minus.</div>
+  <div class="warn"><b>Do not mix this up with adding.</b> When you <b>add</b> like terms, the exponent stays the same: ${m('x^2 + x^2 = 2x^2')}. When you <b>multiply</b>, the exponents add: ${m('x^2 · x^2 = x^4')}.</div>`,
  ex:{q:`Find the area of a sign with length ${m('(5x + 3)')} and width ${m('(2x + 4)')}.`,
   steps:[`Area = length × width = ${m('(5x + 3)(2x + 4)')}.`,`${m('5x · 2x = 10x^2')}`,`${m('5x · 4 = 20x')}`,`${m('3 · 2x = 6x')}`,`${m('3 · 4 = 12')}`,`Add the like terms: 20x + 6x = 26x. Answer: ${m('10x^2 + 26x + 12')}.`]},
  checks:[{q:`Multiply ${m('4x^2(2x^3 + 5x^2 − 6x + 3)')}.`,options:[m('8x^5 + 20x^4 − 24x^3 + 12x^2'),m('8x^6 + 20x^4 − 24x^2 + 12'),m('6x^5 + 9x^4 − 2x^3 + 7x^2'),m('8x^5 + 5x^2 − 6x + 3')],a:0,why:`Multiply ${m('4x^2')} by each term: 4×2 = 8 and 2+3 = 5; 4×5 = 20 and 2+2 = 4; 4×(−6) = −24 and 2+1 = 3; 4×3 = 12 and the exponent stays 2.`}]},
 {t:'Dividing by a monomial', html:`
-  <p>Divide <b>each term</b> on its own. Divide the <b>numbers</b>, and <b>subtract the exponents</b>.</p>
-  <div class="rule">${m('36x^9 ÷ 6x^3 = 6x^6')} because 36 ÷ 6 = 6 and 9 − 3 = 6.<br>If the exponents are equal, the x disappears: ${m('24x^3 ÷ 6x^3 = 4')}.</div>`,
+  <h4>Words you need first</h4>
+  <ul class="words">
+   <li><b>Monomial:</b> one single term, like ${m('6x^3')}.</li>
+   <li><b>Quotient:</b> the answer to a division.</li>
+  </ul>
+  <h4>Dividing two terms</h4>
+  <p>Do two small jobs: divide the <b>numbers</b>, then <b>subtract the exponents</b>.</p>
+  <div class="plain"><b>Why do we subtract the exponents?</b> Write it out. ${m('x^5 ÷ x^2')} is ${m('(x · x · x · x · x) ÷ (x · x)')}. Two x's on the bottom cancel two on the top. Three x's are left: ${m('x^3')}. And 5 − 2 = 3.</div>
+  <div class="rule">${m('36x^9 ÷ 6x^3 = 6x^6')} because 36 ÷ 6 = 6 and 9 − 3 = 6.<br>If the exponents are the same, all the x's cancel and only the number is left: ${m('24x^3 ÷ 6x^3 = 4')}.</div>
+  <h4>Dividing a longer polynomial</h4>
+  <p>If the top has more than one term, <b>each term</b> gets divided by the bottom, one at a time. Think of splitting a bill: every item on it gets shared, not just the first one.</p>
+  <div class="warn"><b>Common mistake:</b> dividing only the first term and leaving the others alone. Every term on top must be divided.</div>`,
  ex:{q:`Find the quotient: ${m('(36x^9 + 24x^3) ÷ (6x^3)')}.`,
   steps:[`Split it into two divisions: ${m('36x^9 ÷ 6x^3')} and ${m('24x^3 ÷ 6x^3')}.`,`First: 36 ÷ 6 = 6, and 9 − 3 = 6. So ${m('6x^6')}.`,`Second: 24 ÷ 6 = 4, and 3 − 3 = 0, so no x is left. That gives 4.`,`Answer: ${m('6x^6 + 4')}.`]},
  checks:[{q:`${m('(20x^5 + 10x^2) ÷ (5x^2)')} = ?`,options:[m('4x^3 + 2'),m('4x^7 + 2x^4'),m('15x^3 + 5'),m('4x^3 + 2x')],a:0,why:'20 ÷ 5 = 4 and 5 − 2 = 3. Then 10 ÷ 5 = 2 and 2 − 2 = 0, so the x is gone.'}]},
 {t:'Square Root Property and imaginary numbers', html:`
-  <div class="rule"><b>Square Root Property:</b> if ${m('x^2 = n')}, then ${m('x = ±√n')}.<br>The ± means there are two answers: one positive, one negative.</div>
-  <p>First get ${m('x^2')} alone on one side. Then take the square root of both sides.</p>
-  <div class="rule"><b>Imaginary unit:</b> ${m('i')} is the number where ${m('i^2 = −1')}, so ${m('√(−1) = i')}.<br>If you have to take the root of a <b>negative</b> number, take the root of the positive number and put ${m('i')} after it: ${m('√(−49) = 7i')}.</div>`,
+  <h4>Squares and square roots</h4>
+  <p>To <b>square</b> a number, multiply it by itself: ${m('7^2 = 7 × 7 = 49')}.</p>
+  <p>A <b>square root</b> goes backwards. ${m('√49')} asks "what number times itself gives 49?" The answer is 7.</p>
+  <div class="plain"><b>Why are there two answers?</b> ${m('7 × 7 = 49')}, but ${m('(−7) × (−7) = 49')} too, because a negative times a negative is positive. So if ${m('x^2 = 49')}, x could be 7 or −7. We write both at once as ${m('x = ±7')}. The ± sign is read "plus or minus".</div>
+  <div class="rule"><b>Square Root Property:</b> if ${m('x^2 = n')}, then ${m('x = ±√n')}.</div>
+  <h4>How to use it</h4>
+  <p>An equation is like a balance scale: whatever you do to one side, you must do to the other. First get ${m('x^2')} <b>alone</b> on one side. Then take the square root of both sides.</p>
+  <p>If the number is not a perfect square, just leave the root: ${m('x^2 = 11')} gives ${m('x = ±√11')}.</p>
+  <h4>Imaginary numbers</h4>
+  <p>What is ${m('√(−49)')}? Try it: positive × positive is positive, and negative × negative is also positive. So <b>no ordinary number</b> times itself gives a negative.</p>
+  <p>Mathematicians fixed this by inventing a new number called ${m('i')}, the <b>imaginary unit</b>.</p>
+  <div class="rule">${m('i^2 = −1')}, which means ${m('√(−1) = i')}.<br>To root a negative number: root the positive number, then write ${m('i')} after it. ${m('√(−49) = 7i')}, and ${m('√(−36) = 6i')}.</div>
+  <div class="warn"><b>Common mistakes:</b> forgetting the ±, and forgetting the ${m('i')} when the number under the root is negative.</div>`,
  ex:{q:`Solve ${m('x^2 + 49 = 0')}.`,
   steps:[`Get ${m('x^2')} alone: subtract 49 from both sides. ${m('x^2 = −49')}.`,`Take the square root of both sides: ${m('x = ±√(−49)')}.`,`The number is negative, so the answer uses ${m('i')}. ${m('√49 = 7')}, so ${m('√(−49) = 7i')}.`,`Answer: ${m('x = ±7i')}.`]},
  checks:[{q:`Solve ${m('x^2 + 4 = 15')}.`,options:[m('x = ±√19'),m('x = ±√15'),m('x = ±√11'),m('x = ±√4')],a:2,why:`Subtract 4 from both sides: ${m('x^2 = 11')}. Then ${m('x = ±√11')}.`}]},
 {t:'Completing the square', html:`
-  <p>A <b>perfect square trinomial</b> is something like ${m('x^2 + 12x + 36')}, which is the same as ${m('(x + 6)^2')}.</p>
-  <div class="rule">To make ${m('x^2 + bx + c')} a perfect square: <b>halve b, then square it.</b> &nbsp; ${m('c = (b/2)^2')}<br>The trinomial then equals ${m('(x + b/2)^2')}.</div>
-  <p>You can use this to solve an equation: move the plain number to the other side, add ${m('(b/2)^2')} to <b>both</b> sides, then use the Square Root Property.</p>`,
+  <h4>What is a perfect square trinomial?</h4>
+  <p>Multiply a bracket by itself and see what comes out:</p>
+  <div class="plain">${m('(x + 6)^2 = (x + 6)(x + 6) = x^2 + 6x + 6x + 36 = x^2 + 12x + 36')}<br>
+  Look at the numbers. The middle number 12 is <b>double</b> 6. The last number 36 is <b>6 squared</b>.</div>
+  <p>That pattern always happens. So we can go backwards: if we only know the middle number, we can find the last one.</p>
+  <div class="rule">For ${m('x^2 + bx + c')}: <b>halve b, then square it.</b> &nbsp; ${m('c = (b/2)^2')}<br>The trinomial is then ${m('(x + b/2)^2')}.<br>Example: ${m('x^2 + 12x')}. Half of 12 is 6. 6 squared is 36. So ${m('x^2 + 12x + 36 = (x + 6)^2')}.</div>
+  <p>If b is negative, the bracket has a minus: for ${m('x^2 − 10x')}, half of −10 is −5, and ${m('(−5)^2 = 25')}. So ${m('x^2 − 10x + 25 = (x − 5)^2')}.</p>
+  <h4>Why bother?</h4>
+  <p>Because it turns a hard equation into "(something)² = a number", and you already know how to solve that with the Square Root Property from topic 7.</p>
+  <h4>Solving an equation this way</h4>
+  <div class="rule">1. Move the plain number to the other side.<br>2. Halve b and square it. Add that number to <b>both</b> sides (keep the scale balanced).<br>3. Write the left side as a bracket squared.<br>4. Take the square root of both sides. Remember the ±.<br>5. Get x alone. The ± gives you two answers.</div>
+  <div class="warn"><b>Common mistake:</b> adding the new number to one side only. It must go on both sides.</div>`,
  ex:{q:`Solve ${m('x^2 + 6x − 7 = 0')} by completing the square.`,
   steps:[`Move the plain number over: add 7 to both sides. ${m('x^2 + 6x = 7')}.`,`Half of 6 is 3, and ${m('3^2 = 9')}. Add 9 to both sides: ${m('x^2 + 6x + 9 = 16')}.`,`The left side is now a perfect square: ${m('(x + 3)^2 = 16')}.`,`Take the square root of both sides: ${m('x + 3 = ±4')}.`,`Subtract 3: ${m('x = −3 + 4 = 1')} or ${m('x = −3 − 4 = −7')}.`]},
  checks:[{q:`What value of c makes ${m('x^2 + 12x + c')} a perfect square?`,options:['6','12','36','144'],a:2,why:`Half of 12 is 6, and ${m('6^2 = 36')}. So ${m('x^2 + 12x + 36 = (x + 6)^2')}.`}]},
 {t:'Quadratic Formula and the discriminant', html:`
-  <p>The Quadratic Formula solves <b>any</b> equation of the form ${m('ax^2 + bx + c = 0')}.</p>
+  <h4>Words you need first</h4>
+  <ul class="words">
+   <li><b>Quadratic equation:</b> an equation where the biggest exponent is 2, like ${m('x^2 + 5x − 3 = 0')}.</li>
+   <li><b>Solution:</b> a value of x that makes the equation true.</li>
+   <li><b>Real number:</b> an ordinary number. <b>Complex number:</b> a number with ${m('i')} in it, like ${m('2 + 3i')}.</li>
+  </ul>
+  <h4>Step 1: find a, b and c</h4>
+  <p>Make sure the equation says "= 0" first. Then read off three numbers from ${m('ax^2 + bx + c = 0')}:</p>
+  <div class="plain">${m('a')} = the number in front of ${m('x^2')}<br>${m('b')} = the number in front of ${m('x')}<br>${m('c')} = the plain number<br>
+  <b>Take the sign with the number.</b> In ${m('x^2 − 4x + 13 = 0')}: ${m('a = 1')} (no number shown means 1), ${m('b = −4')}, ${m('c = 13')}.</div>
+  <h4>Step 2: use the formula</h4>
   <div class="rule" style="font-size:1.1em">${m('x = (−b ± √(b^2 − 4ac)) / (2a)')}</div>
-  <p>The part under the root, ${m('b^2 − 4ac')}, is called the <b>discriminant</b>. Work it out first: it tells you what kind of answers to expect.</p>
-  <table><tr><th>Discriminant</th><th>Solutions</th></tr><tr><td>positive</td><td>2 real solutions</td></tr><tr><td>zero</td><td>1 real solution</td></tr><tr><td>negative</td><td>2 complex (imaginary) solutions</td></tr></table>`,
+  <p>In words: "minus b, plus or minus the square root of (b squared minus 4 times a times c), all divided by 2 times a". This works for <b>every</b> quadratic equation.</p>
+  <h4>The discriminant</h4>
+  <p>The part under the root, ${m('b^2 − 4ac')}, is called the <b>discriminant</b>. Work it out first. It tells you what kind of answers you will get.</p>
+  <table><tr><th>Discriminant</th><th>Solutions</th><th>Why</th></tr>
+  <tr><td>positive</td><td>2 real solutions</td><td>the root is a normal number, and ± gives two answers</td></tr>
+  <tr><td>zero</td><td>1 real solution</td><td>the root of 0 is 0, so + and − give the same answer</td></tr>
+  <tr><td>negative</td><td>2 complex (imaginary) solutions</td><td>the root of a negative needs ${m('i')}</td></tr></table>
+  <div class="warn"><b>Common mistakes:</b><br>
+  1. ${m('b^2')} is never negative. ${m('(−4)^2 = 16')}, not −16.<br>
+  2. If b is negative, ${m('−b')} becomes positive. ${m('−(−4) = 4')}.<br>
+  3. If c is negative, ${m('−4ac')} turns into a plus. ${m('−4(1)(−3) = +12')}.<br>
+  4. The <b>whole</b> top is divided by ${m('2a')}, not just the root.</div>`,
  ex:{q:`Solve ${m('x^2 − 4x + 13 = 0')}.`,
   steps:[`Read off the numbers: ${m('a = 1')}, ${m('b = −4')}, ${m('c = 13')}.`,`Discriminant: ${m('b^2 − 4ac = (−4)^2 − 4(1)(13) = 16 − 52 = −36')}.`,`It is negative, so there are <b>two complex solutions</b>.`,`Put the numbers in the formula: ${m('x = (4 ± √(−36)) / 2')}. Note ${m('−b')} is ${m('−(−4) = 4')}.`,`${m('√(−36) = 6i')}, so ${m('x = (4 ± 6i) / 2')}.`,`Divide both parts by 2: ${m('x = 2 ± 3i')}.`]},
  checks:[{q:`Solve ${m('x^2 + 5x − 3 = 0')} with the Quadratic Formula.`,options:[m('(5 ± √37) / 2'),m('(−5 ± √37) / 2'),m('(−5 ± i√13) / 2'),m('(5 ± √13) / 2')],a:1,why:`${m('a = 1, b = 5, c = −3')}. Discriminant: ${m('25 − 4(1)(−3) = 25 + 12 = 37')}. So ${m('x = (−5 ± √37) / 2')}.`}]},
 {t:'Vertex of a parabola and checking a model', html:`
-  <p>The <b>vertex</b> is the highest or lowest point of a parabola ${m('ax^2 + bx + c')}.</p>
-  <div class="rule"><b>Step 1:</b> the x-value (or time) of the vertex is ${m('−b / (2a)')}.<br><b>Step 2:</b> put that value back into the function to get the height.<br>If ${m('a')} is <b>negative</b> the parabola opens down, so the vertex is a <b>maximum</b>.</div>
-  <div class="rule"><b>Does a model fit the data?</b> Put each x from the table into the function. If every answer matches the table exactly, the fit is perfect and the coefficient of determination is ${m('R^2 = 1')}.</div>`,
+  <h4>Words you need first</h4>
+  <ul class="words">
+   <li><b>Parabola:</b> the U-shaped graph you get from a quadratic, ${m('ax^2 + bx + c')}.</li>
+   <li><b>Vertex:</b> the turning point of the U. It is the very lowest point or the very highest point.</li>
+   <li><b>Model:</b> a function that tries to describe real data, such as the height of a ball over time.</li>
+  </ul>
+  <h4>Which way does it open?</h4>
+  <div class="plain">If ${m('a')} is <b>positive</b>, the parabola opens up like a smile. The vertex is at the bottom, so it is a <b>minimum</b>.<br>
+  If ${m('a')} is <b>negative</b>, it opens down like a frown. The vertex is at the top, so it is a <b>maximum</b>. A thrown ball always has a negative ${m('a')}: it goes up, then comes down.</div>
+  <h4>Finding the vertex</h4>
+  <div class="rule"><b>Step 1:</b> the x-value of the vertex is ${m('−b / (2a)')}.<br><b>Step 2:</b> put that x-value back into the function. The answer is the height of the vertex.</div>
+  <p>Why ${m('−b / (2a)')}? A parabola is the same on both sides, like a mirror. The vertex sits exactly in the middle, and the middle works out to ${m('−b / (2a)')}. It is the Quadratic Formula without the ± part.</p>
+  <h4>What "interpret" means</h4>
+  <p>Say what the two numbers mean in the story. In a ball problem, x is the <b>time</b> and the function gives the <b>height</b>. So a vertex of (1.5, 41) means: "the ball reaches its highest point, 41 feet, after 1.5 seconds".</p>
+  <h4>Does a model fit the data?</h4>
+  <p>${m('R^2')} (the coefficient of determination) is a score from 0 to 1 for how well a model matches the data. ${m('R^2 = 1')} means a <b>perfect</b> match.</p>
+  <div class="rule">To check: put each x from the table into the function. If <b>every</b> answer is exactly the same as the table, then ${m('R^2 = 1')}. If even one is different, the fit is not perfect.</div>`,
  ex:{q:`A ball's height is ${m('h(t) = −16t^2 + 48t + 5')}. Find and interpret the vertex.`,
   steps:[`Read off ${m('a = −16')} and ${m('b = 48')}.`,`Time of the vertex: ${m('t = −b / (2a) = −48 / (2 × −16) = −48 / −32 = 1.5')} seconds.`,`Put 1.5 back in: ${m('h(1.5) = −16(1.5)^2 + 48(1.5) + 5')}.`,`${m('(1.5)^2 = 2.25')}, so ${m('−16 × 2.25 = −36')}. And ${m('48 × 1.5 = 72')}.`,`${m('−36 + 72 + 5 = 41')} feet.`,`${m('a')} is negative, so this is a maximum: the ball reaches its <b>highest point, 41 feet, after 1.5 seconds</b>.`]},
  checks:[{q:`A table has the points (0, 4), (0.5, 16), (1, 20), (1.5, 16), (2, 4). Does ${m('f(x) = −16x^2 + 32x + 4')} fit with ${m('R^2 = 1')}?`,options:['True','False'],a:0,why:`Check each point: f(0) = 4, f(0.5) = −4 + 16 + 4 = 16, f(1) = −16 + 32 + 4 = 20, f(1.5) = −36 + 48 + 4 = 16, f(2) = −64 + 64 + 4 = 4. Every one matches, so the fit is perfect.`}]}
